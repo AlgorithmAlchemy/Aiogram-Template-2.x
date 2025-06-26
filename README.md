@@ -29,3 +29,13 @@ pip install -r requirements.txt
 cp .env.example .env
 # Заполните .env своими данными
 python main.py 
+
+├── app/
+│   ├── handlers/      # Все обработчики
+│   ├── keyboards/     # Клавиатуры  
+│   ├── middlewares/   # Прослойки
+│   ├── services/      # Бизнес-логика
+│   └── utils/         # Вспомогательные функции
+├── config.py          # Конфигурация
+├── main.py            # Точка входа
+└── README.md          # Документация
