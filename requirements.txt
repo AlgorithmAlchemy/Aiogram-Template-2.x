@@ -1,4 +1,4 @@
-aiogram~=2.21
+aiogram~=3.20.0.post0
 peewee~=3.15.4
 DateTime~=5.1
 asyncio~=3.4.3
