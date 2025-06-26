@@ -192,3 +192,4 @@ Thumbs.db
 /module/Inviter/session
 /module/Inviter/session_old
 _showyourwork.sqlite
+/states/admin/upload_vpn_string.py
