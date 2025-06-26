@@ -20,3 +20,12 @@ Aiogram 3.x
 Redis (для FSM и кэша)
 
 Docker (опционально)
+
+🚀 Быстрый старт:
+bash
+git clone https://github.com/AlgorithmAlchemy/Aiogram-Sample-Template.git
+cd Aiogram-Sample-Template
+pip install -r requirements.txt
+cp .env.example .env
+# Заполните .env своими данными
+python main.py 
