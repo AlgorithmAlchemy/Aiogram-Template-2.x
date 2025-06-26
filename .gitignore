@@ -193,3 +193,4 @@ Thumbs.db
 /module/Inviter/session_old
 _showyourwork.sqlite
 /states/admin/upload_vpn_string.py
+/handlers/users/message/users.sqlite
