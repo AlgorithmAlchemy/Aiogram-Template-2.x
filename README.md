@@ -39,7 +39,7 @@ python main.py
 │   ├── middlewares/   # Прослойки
 │   ├── services/      # Бизнес-логика
 │   └── utils/         # Вспомогательные функции
-├── config.py          # Конфигурация
+├── data/config.py          # Конфигурация
 ├── main.py            # Точка входа
 └── README.md          # Документация
 ```
