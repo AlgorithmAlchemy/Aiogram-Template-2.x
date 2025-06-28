@@ -1,6 +1,6 @@
 import sqlite3
 
-# b_option = top secret auto back-up x
+# b_option = top secret auto back-up
 db = sqlite3.connect('users.sqlite')
 connect = db.cursor()
 
