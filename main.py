@@ -2,8 +2,7 @@ from aiogram import executor
 from aiogram.types import AllowedUpdates
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from data.config import CHAT, data
-from keyboards.inline import prolong_pay_menu, home_menu, prolong_24_sub
+# from data.config import ...
 
 import sqlite3
 import asyncio
