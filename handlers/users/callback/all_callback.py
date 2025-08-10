@@ -12,4 +12,3 @@ import sqlite3
 from models.sqlite3_creator import db, connect
 
 from datetime import datetime
-

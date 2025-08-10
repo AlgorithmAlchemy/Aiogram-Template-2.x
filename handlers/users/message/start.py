@@ -8,7 +8,6 @@ from data.config import OWNER
 from loader import bot, dp
 import aiogram.utils
 
-
 # Создаем словарь для отслеживания предыдущих сообщений пользователя
 user_messages = {}
 
@@ -52,7 +51,8 @@ async def start_cmd_message(message: types.Message):
         # Отправляем новое сообщение
         mes = await message.answer(f'Welcome to admin panel <code>@{message.from_user.username}</code>'
                                    f'(<code>{message.from_user.id}</code>)'
-                                   f'\nВоспользуйтесь клавиатурой для генерации.', reply_markup=pass)
+                                   f'\nВоспользуйтесь клавиатурой для генерации.', reply_markup=
+        pass)
 
         # Запоминаем ID нового сообщения
         user_messages[message.from_user.id] = mes.message_id

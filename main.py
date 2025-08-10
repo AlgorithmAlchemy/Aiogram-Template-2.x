@@ -11,14 +11,19 @@ from models.sqlite3_creator import db, connect
 from loader import dp, bot
 import filters, handlers, models, states
 
+
 def your_fun():
     pass
+
+
 #  ###################  ###################
 
 async def on_startup(dp):
-    # scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
-    # scheduler.add_job(your_fun, trigger='interval', hours=0, minutes=5, seconds=60)
-    # scheduler.start()
+
+
+# scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
+# scheduler.add_job(your_fun, trigger='interval', hours=0, minutes=5, seconds=60)
+# scheduler.start()
 
 
 if __name__ == '__main__':

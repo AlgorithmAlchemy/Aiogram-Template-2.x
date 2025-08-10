@@ -8,4 +8,3 @@ def order_cancel():
     menu = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
     menu.add(cancel)
     return menu
-

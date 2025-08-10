@@ -4,7 +4,6 @@ import sqlite3
 db = sqlite3.connect('users.sqlite')
 connect = db.cursor()
 
-
 connect.execute('''CREATE TABLE IF NOT EXISTS invoice (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT,
