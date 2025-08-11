@@ -4,17 +4,20 @@
 .env.local
 .env.production
 .env.staging
+.env.development
 
 # База данных
 *.db
 *.sqlite
 *.sqlite3
 data/botBD.db
+*.sql
 
 # Логи
 *.log
 logs/
 bot.log
+*.log.*
 
 # Python
 __pycache__/
@@ -45,6 +48,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
+.venv/
 
 # IDE
 .vscode/
@@ -52,6 +56,9 @@ venv.bak/
 *.swp
 *.swo
 *~
+.project
+.pydevproject
+.settings/
 
 # OS
 .DS_Store
@@ -61,8 +68,74 @@ venv.bak/
 .Trashes
 ehthumbs.db
 Thumbs.db
+desktop.ini
 
 # Временные файлы
 *.tmp
 *.temp
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*.pid
+*.seed
+*.pid.lock
+
+# Загрузки и медиа
+downloads/
+uploads/
+media/
+files/
+images/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# Резервные копии
+backups/
+*.backup
+*.bak
+
+# Конфигурационные файлы (кроме примеров)
+config.ini
+settings.json
+secrets.json
+
+# Кэш
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Документация
+docs/_build/
+site/
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Мониторинг
+prometheus.yml
+grafana/
+
+# Специфичные для проекта
 data/message_urls
+*.session
+*.session-journal
