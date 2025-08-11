@@ -29,10 +29,20 @@
 git clone https://github.com/AlgorithmAlchemy/Aiogram-Sample-Template.git
 cd Aiogram-Sample-Template
 pip install -r requirements.txt
-cp .env.example .env
+cp env.example .env
 # Заполните .env своими данными
 python main.py
 ```
+
+### 🔒 Безопасность:
+
+**ВАЖНО**: Никогда не коммитьте файл `.env` в репозиторий!
+- Скопируйте `env.example` в `.env`
+- Заполните в `.env` ваши реальные данные:
+  - `BOT_TOKEN` - токен от @BotFather
+  - `OWNER_IDS` - ID администраторов (через запятую)
+  - `CHAT_ID` - ID чата/группы
+  - `SUPPORT_USERNAME` - username поддержки
 
 ### 📂 Структура проекта:
 
