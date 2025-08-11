@@ -1,2 +1,4 @@
-from . import help
-from . import start
+# Импорт всех обработчиков сообщений
+from . import commands
+
+__all__ = ['commands']
