@@ -1,70 +1,93 @@
 from aiogram import types
+from aiogram.types import ParseMode
 import datetime
-import asyncio
+import logging
 
-from aiogram.utils import exceptions
-import re
-from data.config import OWNER
+from data.config import OWNER, BOT_NAME, BOT_DESCRIPTION
 from loader import bot, dp
-import aiogram.utils
+from keyboards.inline import get_main_keyboard, get_admin_keyboard
 
-# Создаем словарь для отслеживания предыдущих сообщений пользователя
-user_messages = {}
-
-import asyncio
-import re
-
-from aiogram import types
-from aiogram.utils import exceptions
-
-from data.config import OWNER
-from loader import bot, dp
-
-# Создаем словарь для отслеживания предыдущих сообщений пользователя
-user_messages = {}
+logger = logging.getLogger(__name__)
 
 
 @dp.message_handler(commands=['start'], chat_type='private')
 async def start_cmd_message(message: types.Message):
-    if message.from_user.id in OWNER:
-        await message.delete()
-        with open("data/message_urls") as openfile:
-            lines = openfile.readlines()
+    """Обработчик команды /start"""
+    user_id = message.from_user.id
+    username = message.from_user.username
+    first_name = message.from_user.first_name
+    
+    logger.info(f"User {user_id} (@{username}) started the bot")
+    
+    # Приветственное сообщение
+    welcome_text = f"""
+<b>👋 Привет, {first_name}!</b>
 
-        pattern = re.compile(re.escape(str(message.from_user.id)))
-        with open('data/message_urls', 'w') as f:
-            for line in lines:
-                result = pattern.search(line)
-                if result is None:
-                    f.write(line)
+Добро пожаловать в <b>{BOT_NAME}</b>
 
-        for line in lines:
-            if f'{message.from_user.id}' in line:
-                txt_message_id = int(line.replace('\n', '').replace(" ", "").split(",")[1])
-                try:
-                    await bot.delete_message(chat_id=message.from_user.id, message_id=txt_message_id)
-                except aiogram.utils.exceptions.MessageToDeleteNotFound:
-                    pass
-                except aiogram.utils.exceptions.MessageCantBeDeleted:
-                    pass
+{BOT_DESCRIPTION}
 
-        # Отправляем новое сообщение
-        mes = await message.answer(f'Welcome to admin panel <code>@{message.from_user.username}</code>'
-                                   f'(<code>{message.from_user.id}</code>)'
-                                   f'\nВоспользуйтесь клавиатурой для генерации.', reply_markup=
-        pass)
+Выберите действие из меню ниже:
+"""
+    
+    # Проверяем, является ли пользователь администратором
+    if user_id in OWNER:
+        # Админская панель
+        admin_text = f"""
+<b>🔧 Панель администратора</b>
 
-        # Запоминаем ID нового сообщения
-        user_messages[message.from_user.id] = mes.message_id
+Добро пожаловать, <code>@{username}</code> (<code>{user_id}</code>)
 
-        txt_export = open("data/message_urls", 'a+')
+Выберите действие:
+"""
+        await message.answer(
+            admin_text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=get_admin_keyboard()
+        )
+    else:
+        # Обычное меню для пользователей
+        await message.answer(
+            welcome_text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=get_main_keyboard()
+        )
 
-        txt_export.write(
-            f"{str(message.chat.id)}, {str(message.message_id)}\n")
 
-        button_mess_ids = int(message.message_id)
-        button_mess_ids += 1
-        txt_export.write(
-            f"{str(message.chat.id)}, {str(button_mess_ids)}\n")
+@dp.message_handler(commands=['menu'], chat_type='private')
+async def menu_cmd_message(message: types.Message):
+    """Обработчик команды /menu - показывает главное меню"""
+    user_id = message.from_user.id
+    
+    if user_id in OWNER:
+        await message.answer(
+            "🔧 <b>Панель администратора</b>\n\nВыберите действие:",
+            parse_mode=ParseMode.HTML,
+            reply_markup=get_admin_keyboard()
+        )
+    else:
+        await message.answer(
+            "🏠 <b>Главное меню</b>\n\nВыберите действие:",
+            parse_mode=ParseMode.HTML,
+            reply_markup=get_main_keyboard()
+        )
 
-        txt_export.close()
+
+@dp.message_handler(commands=['about'], chat_type='private')
+async def about_cmd_message(message: types.Message):
+    """Обработчик команды /about - информация о боте"""
+    about_text = f"""
+<b>ℹ️ О боте</b>
+
+<b>Название:</b> {BOT_NAME}
+<b>Описание:</b> {BOT_DESCRIPTION}
+<b>Версия:</b> 1.0.0
+<b>Фреймворк:</b> aiogram 2.x
+
+Этот бот создан на основе шаблона aiogram 2.x
+"""
+    
+    await message.answer(
+        about_text,
+        parse_mode=ParseMode.HTML
+    )
