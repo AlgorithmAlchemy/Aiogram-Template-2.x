@@ -8,7 +8,10 @@
 **Современный модульный шаблон для создания Telegram ботов на aiogram 2.x**
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![Aiogram](https://img.shields.io/badge/Aiogram-2.25.2-green.svg)](https://aiogram.dev)
+[![Aiogram](https://img.shields.io/badge/Aiogram-3.20.0-green.svg)](https://aiogram.dev)
+[![Peewee](https://img.shields.io/badge/Peewee-ORM-orange.svg)](https://docs.peewee-orm.com)
+[![APScheduler](https://img.shields.io/badge/APScheduler-Scheduler-red.svg)](https://apscheduler.readthedocs.io)
+[![SQLite](https://img.shields.io/badge/SQLite-Database-lightgrey.svg)](https://sqlite.org)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 🚀 Особенности
