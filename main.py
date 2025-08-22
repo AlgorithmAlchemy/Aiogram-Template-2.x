@@ -138,10 +138,10 @@ class BotManager:
     async def setup_middleware(self):
         """Настройка middleware"""
         try:
-            from utils.middleware.custom_middleware import (
-                LoggingMiddleware, ThrottlingMiddleware, 
-                AdminMiddleware, DatabaseMiddleware
-            )
+            from middleware.logging import LoggingMiddleware
+            from middleware.throttling import ThrottlingMiddleware
+            from middleware.admin import AdminMiddleware
+            from middleware.database import DatabaseMiddleware
             
             # Базовое логирование
             self.dp.middleware.setup(LoggingMiddleware())
