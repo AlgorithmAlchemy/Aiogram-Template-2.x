@@ -2,16 +2,19 @@ from aiogram import executor
 from aiogram.types import AllowedUpdates
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import logging
-import asyncio
 import signal
 import sys
 from datetime import datetime
 
 from data.config import config
 from loader import bot, dp, loader
-from models.sqlite3_creator import db, connect
+from models.sqlite3_creator import connect
 from utils.integration import create_integration
-import filters, handlers, models, states
+# Импорты для регистрации обработчиков
+import filters
+import handlers
+import models
+import states
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +38,12 @@ class BotManager:
     def setup_scheduler(self):
         """Настройка планировщика задач"""
         # Пример добавления задач
-        # self.scheduler.add_job(self.daily_stats, trigger='cron', hour=9, minute=0)
-        # self.scheduler.add_job(self.cleanup_old_data, trigger='cron', hour=2, minute=0)
+        # self.scheduler.add_job(
+        #     self.daily_stats, trigger='cron', hour=9, minute=0
+        # )
+        # self.scheduler.add_job(
+        #     self.cleanup_old_data, trigger='cron', hour=2, minute=0
+        # )
         
         self.scheduler.start()
         logger.info("Scheduler started")
@@ -57,7 +64,9 @@ class BotManager:
             from models.user import User
             
             total_users = User.select().count()
-            active_users = User.select().where(User.is_banned == False).count()
+            active_users = User.select().where(
+                User.is_banned == False
+            ).count()
             
             stats_text = f"""
 <b>📊 Ежедневная статистика</b>
@@ -72,9 +81,13 @@ class BotManager:
             # Отправляем статистику администраторам
             for admin_id in config.admin.owner_ids:
                 try:
-                    await bot.send_message(admin_id, stats_text, parse_mode='HTML')
+                    await bot.send_message(
+                        admin_id, stats_text, parse_mode='HTML'
+                    )
                 except Exception as e:
-                    logger.error(f"Failed to send stats to admin {admin_id}: {e}")
+                    logger.error(
+                        f"Failed to send stats to admin {admin_id}: {e}"
+                    )
                     
         except Exception as e:
             logger.error(f"Error in daily stats: {e}")
@@ -82,7 +95,8 @@ class BotManager:
     async def cleanup_old_data(self):
         """Очистка старых данных"""
         try:
-            # Здесь можно добавить очистку старых логов, временных файлов и т.д.
+            # Здесь можно добавить очистку старых логов,
+            # временных файлов и т.д.
             logger.info("Cleanup completed")
         except Exception as e:
             logger.error(f"Error in cleanup: {e}")
@@ -190,7 +204,83 @@ def main():
     executor.start_polling(
         dp,
         skip_updates=True,
+        # ============================================
+        # ALLOWED_UPDATES - актуальные методы для aiogram 2.x
+        # ============================================
+        # 
+        # 1. Все обновления (по умолчанию)
         allowed_updates=AllowedUpdates.all(),
+        # 
+        # 2. Только сообщения
+        # allowed_updates=AllowedUpdates.MESSAGE,
+        # 
+        # 3. Только callback запросы
+        # allowed_updates=AllowedUpdates.CALLBACK_QUERY,
+        # 
+        # 4. Только inline запросы
+        # allowed_updates=AllowedUpdates.INLINE_QUERY,
+        # 
+        # 5. Только chosen inline результаты
+        # allowed_updates=AllowedUpdates.CHOSEN_INLINE_RESULT,
+        # 
+        # 6. Только channel posts
+        # allowed_updates=AllowedUpdates.CHANNEL_POST,
+        # 
+        # 7. Только edited channel posts
+        # allowed_updates=AllowedUpdates.EDITED_CHANNEL_POST,
+        # 
+        # 8. Только edited messages
+        # allowed_updates=AllowedUpdates.EDITED_MESSAGE,
+        # 
+        # 9. Только shipping queries
+        # allowed_updates=AllowedUpdates.SHIPPING_QUERY,
+        # 
+        # 10. Только pre-checkout queries
+        # allowed_updates=AllowedUpdates.PRE_CHECKOUT_QUERY,
+        # 
+        # 11. Только poll answers
+        # allowed_updates=AllowedUpdates.POLL_ANSWER,
+        # 
+        # 12. Только my chat member updates
+        # allowed_updates=AllowedUpdates.MY_CHAT_MEMBER,
+        # 
+        # 13. Только chat member updates
+        # allowed_updates=AllowedUpdates.CHAT_MEMBER,
+        # 
+        # 14. Только chat join requests
+        # allowed_updates=AllowedUpdates.CHAT_JOIN_REQUEST,
+        # 
+        # 15. Комбинация нескольких типов
+        # allowed_updates=[
+        #     AllowedUpdates.MESSAGE,
+        #     AllowedUpdates.CALLBACK_QUERY,
+        #     AllowedUpdates.EDITED_MESSAGE
+        # ],
+        # 
+        # 16. Только сообщения и callback запросы (оптимально для большинства ботов)
+        # allowed_updates=[
+        #     AllowedUpdates.MESSAGE,
+        #     AllowedUpdates.CALLBACK_QUERY
+        # ],
+        # 
+        # 17. Только сообщения (для простых ботов)
+        # allowed_updates=AllowedUpdates.MESSAGE,
+        # 
+        # 18. Все кроме channel posts (для приватных ботов)
+        # allowed_updates=[
+        #     AllowedUpdates.MESSAGE,
+        #     AllowedUpdates.EDITED_MESSAGE,
+        #     AllowedUpdates.CALLBACK_QUERY,
+        #     AllowedUpdates.INLINE_QUERY,
+        #     AllowedUpdates.CHOSEN_INLINE_RESULT,
+        #     AllowedUpdates.SHIPPING_QUERY,
+        #     AllowedUpdates.PRE_CHECKOUT_QUERY,
+        #     AllowedUpdates.POLL_ANSWER,
+        #     AllowedUpdates.MY_CHAT_MEMBER,
+        #     AllowedUpdates.CHAT_MEMBER,
+        #     AllowedUpdates.CHAT_JOIN_REQUEST
+        # ],
+        # ============================================
         on_startup=bot_manager.on_startup,
         on_shutdown=bot_manager.on_shutdown
     )
