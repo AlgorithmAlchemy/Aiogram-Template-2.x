@@ -2,7 +2,7 @@
 Создание таблиц базы данных с использованием Peewee ORM
 """
 from peewee import *
-from utils.db_api.sqlite import db
+from database.connection import db
 from models.base import BaseModel
 from models.user import (
     User, UserSettings, UserStats, UserWarning, 

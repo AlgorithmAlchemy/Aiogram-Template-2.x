@@ -20,6 +20,12 @@
 │   ├── user.py               # Модели пользователей
 │   ├── migrations.py         # Система миграций
 │   └── sqlite3_creator.py    # Менеджер БД
+├── database/                  # Подключение к БД
+│   └── connection.py         # Настройки подключения
+├── api/                       # Внешние API
+│   ├── base.py               # Базовый класс API
+│   ├── weather.py            # API погоды
+│   └── currency.py           # API валют
 ├── handlers/                  # Обработчики
 │   ├── base_handler.py       # Базовые классы хэндлеров
 │   └── users/message/commands/ # Команды пользователей
@@ -36,9 +42,34 @@
 └── examples/                  # Примеры использования
 ```
 
-## Главная точка входа (main.py)
+## Архитектура загрузки
 
-### BotManager
+### Loader (loader.py)
+
+Базовый загрузчик для инициализации бота:
+
+```python
+class BotLoader:
+    """Класс для базовой инициализации бота"""
+    
+    def setup_storage(self):
+        """Настройка хранилища состояний"""
+        # Memory или Redis storage
+    
+    def setup_bot(self):
+        """Инициализация бота"""
+        # Создание экземпляра бота
+    
+    def setup_dispatcher(self):
+        """Инициализация диспетчера"""
+        # Создание диспетчера
+    
+    def initialize(self):
+        """Базовая инициализация"""
+        # Возвращает bot, dp
+```
+
+### BotManager (main.py)
 
 Центральный класс для управления жизненным циклом бота:
 
@@ -250,8 +281,20 @@ class MigrationManager:
 - История модерации
 - Мягкое удаление
 - Оптимизация и резервное копирование
+- Правильная структура подключения
 
-### 5. **Модульность**
+### 5. **API архитектура**
+- Базовые классы для API оберток
+- Асинхронные контекстные менеджеры
+- Обработка ошибок
+- Легкое создание новых API
+
+### 6. **Правильная загрузка**
+- Loader отвечает только за базовую инициализацию
+- BotManager управляет жизненным циклом
+- Нет дублирования функциональности
+
+### 7. **Модульность**
 - Каждый компонент независим
 - Легко добавлять новые функции
 - Простота тестирования
@@ -310,6 +353,28 @@ ALTER TABLE users ADD COLUMN new_field TEXT;
 
 # Применить миграции
 migration_manager.migrate()
+```
+
+### Создание нового API
+
+```python
+# api/custom.py
+from api.base import BaseAPIWrapper
+
+class CustomAPIWrapper(BaseAPIWrapper):
+    def __init__(self):
+        super().__init__(base_url="https://api.example.com")
+    
+    async def make_request(self, method, endpoint, data=None):
+        # Ваша логика
+        pass
+    
+    async def get_data(self):
+        return await self.get("data")
+
+# Использование
+async with CustomAPIWrapper() as api:
+    data = await api.get_data()
 ```
 
 ## Рекомендации

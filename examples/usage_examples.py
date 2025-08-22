@@ -15,8 +15,8 @@ from aiogram.dispatcher import FSMContext
 
 from data.config import config
 from models.user import User, UserSettings, UserStats
-from utils.api_wrappers.weather_api import WeatherAPIWrapper
-from utils.api_wrappers.currency_api import CurrencyAPIWrapper
+from api.weather import WeatherAPIWrapper
+from api.currency import CurrencyAPIWrapper
 from utils.hooks.event_hooks import EventHooks
 from keyboards.inline.keyboards import MainKeyboards, AdminKeyboards
 

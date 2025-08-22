@@ -3,7 +3,7 @@
 """
 from peewee import Model, DateTimeField, BooleanField
 from datetime import datetime
-from utils.db_api.sqlite import db
+from database.connection import db
 
 
 class BaseModel(Model):

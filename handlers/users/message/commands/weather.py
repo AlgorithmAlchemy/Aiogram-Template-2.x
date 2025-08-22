@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 
 from data.config import config
 from models.user import User
-from utils.api_wrappers.weather_api import WeatherAPIWrapper
+from api.weather import WeatherAPIWrapper
 
 from loader import dp
 
