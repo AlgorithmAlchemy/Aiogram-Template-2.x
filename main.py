@@ -7,7 +7,6 @@ from datetime import datetime
 from typing import List, Optional
 
 from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils import executor
 
 from loader import bot, dp
@@ -179,7 +178,10 @@ class BotManager:
         """Настройка обработчиков ошибок"""
         try:
             @self.dp.errors_handler()
-            async def errors_handler(update: types.Update, exception: Exception) -> bool:
+            async def errors_handler(
+                update: types.Update, 
+                exception: Exception
+            ) -> bool:
                 """Глобальный обработчик ошибок"""
                 logger.error(f"Update: {update}")
                 logger.error(f"Exception: {exception}")
