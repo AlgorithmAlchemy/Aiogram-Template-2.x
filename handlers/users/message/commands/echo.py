@@ -28,6 +28,13 @@ class EchoHandler:
                 stats = UserStats.get_or_none(UserStats.user == db_user)
                 if stats:
                     stats.increment_messages()
+                else:
+                    # Создаем статистику, если её нет
+                    stats = UserStats.create(user=db_user)
+                    stats.increment_messages()
+                
+                # Обновляем время последней активности
+                db_user.update_activity()
             
             # Простой эхо-ответ
             await message.answer(
