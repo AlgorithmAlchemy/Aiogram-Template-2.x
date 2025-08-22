@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from data.config import config
 from loader import dp
 from models.user import User, UserStats
-from filters.admin_filter import AdminFilter
+
 
 logger = logging.getLogger(__name__)
 
@@ -24,14 +24,22 @@ class StatsCommand:
         try:
             # Получаем статистику
             total_users = User.select().count()
+            
+            # Активные сегодня
+            today_start = datetime.now().replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
             active_today = User.select().where(
-                User.last_activity >= datetime.now().replace(
-                    hour=0, minute=0, second=0, microsecond=0
-                )
+                User.last_activity >= today_start
             ).count()
+            
+            # Активные за неделю
+            week_ago = datetime.now() - timedelta(days=7)
             active_week = User.select().where(
-                User.last_activity >= datetime.now() - timedelta(days=7)
+                User.last_activity >= week_ago
             ).count()
+            
+            # Забаненные пользователи
             banned_users = User.select().where(User.is_banned).count()
             
             # Получаем общую статистику сообщений
@@ -49,22 +57,22 @@ class StatsCommand:
 <b>📊 Статистика бота</b>
 
 <b>Пользователи:</b>
-• Всего пользователей: {total_users}
+• Всего: {total_users}
 • Активных сегодня: {active_today}
 • Активных за неделю: {active_week}
 • Забаненных: {banned_users}
 
 <b>Активность:</b>
-• Всего сообщений: {total_messages}
-• Всего команд: {total_commands}
-• Всего файлов: {total_files}
+• Сообщений отправлено: {total_messages}
+• Команд использовано: {total_commands}
+• Файлов отправлено: {total_files}
 
 <b>Система:</b>
-• Версия бота: {config.bot.version}
-• Время работы: {StatsCommand._get_uptime()}
-• Статус: ✅ Активен
+• База данных: ✅ Активна
+• Планировщик: ✅ Активен
+• API Telegram: ✅ Активен
 
-<b>Обновлено:</b> {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}
+<b>Дата:</b> {datetime.now().strftime('%d.%m.%Y %H:%M')}
 """
             
             await message.answer(
@@ -75,14 +83,9 @@ class StatsCommand:
         except Exception as e:
             logger.error(f"Error getting stats: {e}")
             await message.answer("❌ Ошибка при получении статистики")
-    
-    @staticmethod
-    def _get_uptime() -> str:
-        """Возвращает время работы бота"""
-        return "Неизвестно"
 
 
 # Регистрация обработчика
-@dp.message_handler(AdminFilter(), commands=['stats'])
+@dp.message_handler(commands=['stats'], chat_type='private')
 async def stats_cmd(message: types.Message):
     await StatsCommand.handle(message)

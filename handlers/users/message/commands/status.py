@@ -30,7 +30,9 @@ class StatusCommand:
             
             # Получаем статистику пользователей
             total_users = User.select().count()
-            today_start = datetime.now().replace(hour=0, minute=0, second=0)
+            today_start = datetime.now().replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
             active_users = User.select().where(
                 User.last_activity >= today_start
             ).count()
@@ -68,7 +70,8 @@ class StatusCommand:
     def _get_uptime() -> str:
         """Возвращает время работы бота"""
         # Здесь можно добавить логику для отслеживания времени работы
-        return "Неизвестно"
+        # Пока возвращаем текущее время как пример
+        return datetime.now().strftime('%d.%m.%Y %H:%M:%S')
 
 
 # Регистрация обработчика

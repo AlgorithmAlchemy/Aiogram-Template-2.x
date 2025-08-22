@@ -5,7 +5,6 @@ import logging
 from data.config import config
 from loader import dp
 from models.user import User
-from filters.admin_filter import AdminFilter
 
 logger = logging.getLogger(__name__)
 
@@ -20,17 +19,12 @@ class WarnUserCommand:
             await message.answer("❌ У вас нет прав администратора!")
             return
         
-        # Проверяем, есть ли аргументы
+        # Получаем аргументы команды
         args = message.get_args().split()
         if not args:
             await message.answer(
-                "⚠️ <b>Предупреждение пользователя</b>\n\n"
-                "Использование: <code>/warn_user [ID/username] [причина]</code>\n\n"
-                "Примеры:\n"
-                "<code>/warn_user 123456789</code>\n"
-                "<code>/warn_user @username</code>\n"
-                "<code>/warn_user 123456789 Нарушение правил</code>",
-                parse_mode=ParseMode.HTML
+                "❌ Укажите ID или username пользователя!\n"
+                "Пример: /warn_user 123456789 или /warn_user @username"
             )
             return
         
@@ -69,9 +63,17 @@ class WarnUserCommand:
                 await message.answer("❌ Вы не можете предупредить сами себя!")
                 return
             
-            # Проверяем, не пытается ли админ предупредить другого админа
-            if user_id in config.admin.owner_ids:
-                await message.answer("❌ Вы не можете предупредить другого администратора!")
+            # Проверяем, не забанен ли пользователь
+            if user.is_banned:
+                await message.answer("❌ Пользователь заблокирован!")
+                return
+            
+            # Проверяем, можно ли добавить предупреждение
+            if not user.can_be_warned():
+                await message.answer(
+                    f"❌ Пользователь уже имеет максимальное количество "
+                    f"предупреждений ({user.warnings}/{user.max_warnings})!"
+                )
                 return
             
             # Добавляем предупреждение
@@ -79,27 +81,36 @@ class WarnUserCommand:
             
             # Логируем действие
             logger.info(
-                f"Admin {message.from_user.id} warned user {user_id}. "
-                f"Reason: {reason}"
+                f"Admin {message.from_user.id} warned user {user_id} "
+                f"for reason: {reason}"
             )
             
+            # Отправляем подтверждение
+            warn_text = f"""
+<b>⚠️ Пользователь предупрежден</b>
+
+<b>ID:</b> <code>{user_id}</code>
+<b>Имя:</b> {user.first_name}
+<b>Username:</b> @{user.username or 'Не указан'}
+<b>Причина:</b> {reason}
+<b>Администратор:</b> {message.from_user.first_name}
+
+<b>Предупреждения:</b> {user.warnings}/{user.max_warnings}
+
+<i>При достижении максимума предупреждений пользователь будет заблокирован</i>
+"""
+            
             await message.answer(
-                f"⚠️ <b>Пользователь предупрежден</b>\n\n"
-                f"<b>ID:</b> <code>{user_id}</code>\n"
-                f"<b>Имя:</b> {user.first_name}\n"
-                f"<b>Username:</b> @{user.username or 'Не указан'}\n"
-                f"<b>Причина:</b> {reason}\n"
-                f"<b>Предупреждений:</b> {user.warnings}\n"
-                f"<b>Предупредил:</b> {message.from_user.first_name}",
+                warn_text,
                 parse_mode=ParseMode.HTML
             )
             
         except Exception as e:
-            logger.error(f"Error warning user {target}: {e}")
-            await message.answer("❌ Произошла ошибка при предупреждении пользователя!")
+            logger.error(f"Error warning user: {e}")
+            await message.answer("❌ Ошибка при предупреждении пользователя")
 
 
 # Регистрация обработчика
-@dp.message_handler(AdminFilter(), commands=['warn_user'])
+@dp.message_handler(commands=['warn_user'], chat_type='private')
 async def warn_user_cmd(message: types.Message):
     await WarnUserCommand.handle(message)

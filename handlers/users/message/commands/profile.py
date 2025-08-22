@@ -5,15 +5,18 @@ import logging
 from data.config import config
 from loader import dp
 from models.user import User, UserStats
+from handlers.base_handler import BaseCommandHandler
 
 logger = logging.getLogger(__name__)
 
 
-class ProfileCommand:
+class ProfileCommandHandler(BaseCommandHandler):
     """Обработчик команды /profile"""
     
-    @staticmethod
-    async def handle(message: types.Message):
+    def get_command(self) -> str:
+        return "profile"
+    
+    async def handle(self, message: types.Message):
         """Обработчик команды /profile - показывает профиль пользователя"""
         user = message.from_user
         
@@ -26,8 +29,10 @@ class ProfileCommand:
                 stats = UserStats.get_or_none(UserStats.user == db_user)
                 
                 # Определяем статус пользователя
-                user_status = ('👑 Администратор' if user.id in config.admin.owner_ids 
-                              else '👤 Пользователь')
+                user_status = (
+                    '👑 Администратор' if user.id in config.admin.owner_ids 
+                    else '👤 Пользователь'
+                )
                 
                 # Определяем статус аккаунта
                 account_status = ('🚫 Забанен' if db_user.is_banned else '✅ Активен')
@@ -45,7 +50,7 @@ class ProfileCommand:
 <b>Статус:</b> {user_status}
 
 <b>Дата регистрации:</b> {db_user.created_at.strftime('%d.%m.%Y %H:%M')}
-<b>Последняя активность:</b> {db_user.updated_at.strftime('%d.%m.%Y %H:%M')}
+<b>Последняя активность:</b> {db_user.last_activity.strftime('%d.%m.%Y %H:%M')}
 
 <b>Статистика:</b>
 • Сообщений отправлено: {stats.messages_sent if stats else 0}
@@ -74,7 +79,5 @@ class ProfileCommand:
             await message.answer("❌ Ошибка при получении профиля")
 
 
-# Регистрация обработчика
-@dp.message_handler(commands=['profile'], chat_type='private')
-async def profile_cmd(message: types.Message):
-    await ProfileCommand.handle(message)
+# Создаем экземпляр хэндлера для автоматической регистрации
+profile_handler = ProfileCommandHandler(dp)

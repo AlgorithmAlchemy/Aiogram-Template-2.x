@@ -5,7 +5,6 @@ import logging
 from data.config import config
 from loader import dp
 from models.user import User
-from filters.admin_filter import AdminFilter
 
 logger = logging.getLogger(__name__)
 
@@ -20,16 +19,12 @@ class UnbanUserCommand:
             await message.answer("❌ У вас нет прав администратора!")
             return
         
-        # Проверяем, есть ли аргументы
+        # Получаем аргументы команды
         args = message.get_args().split()
         if not args:
             await message.answer(
-                "✅ <b>Разбан пользователя</b>\n\n"
-                "Использование: <code>/unban_user [ID/username]</code>\n\n"
-                "Примеры:\n"
-                "<code>/unban_user 123456789</code>\n"
-                "<code>/unban_user @username</code>",
-                parse_mode=ParseMode.HTML
+                "❌ Укажите ID или username пользователя!\n"
+                "Пример: /unban_user 123456789 или /unban_user @username"
             )
             return
         
@@ -62,9 +57,14 @@ class UnbanUserCommand:
                     )
                     return
             
-            # Проверяем, забанен ли пользователь
+            # Проверяем, не пытается ли админ разбанить сам себя
+            if user_id == message.from_user.id:
+                await message.answer("❌ Вы не можете разбанить сами себя!")
+                return
+            
+            # Проверяем, не забанен ли пользователь
             if not user.is_banned:
-                await message.answer("❌ Пользователь не забанен!")
+                await message.answer("❌ Пользователь не заблокирован!")
                 return
             
             # Разбаниваем пользователя
@@ -75,21 +75,29 @@ class UnbanUserCommand:
                 f"Admin {message.from_user.id} unbanned user {user_id}"
             )
             
+            # Отправляем подтверждение
+            unban_text = f"""
+<b>✅ Пользователь разблокирован</b>
+
+<b>ID:</b> <code>{user_id}</code>
+<b>Имя:</b> {user.first_name}
+<b>Username:</b> @{user.username or 'Не указан'}
+<b>Администратор:</b> {message.from_user.first_name}
+
+<i>Пользователь снова может использовать бота</i>
+"""
+            
             await message.answer(
-                f"✅ <b>Пользователь разбанен</b>\n\n"
-                f"<b>ID:</b> <code>{user_id}</code>\n"
-                f"<b>Имя:</b> {user.first_name}\n"
-                f"<b>Username:</b> @{user.username or 'Не указан'}\n"
-                f"<b>Разбанил:</b> {message.from_user.first_name}",
+                unban_text,
                 parse_mode=ParseMode.HTML
             )
             
         except Exception as e:
-            logger.error(f"Error unbanning user {target}: {e}")
-            await message.answer("❌ Произошла ошибка при разбане пользователя!")
+            logger.error(f"Error unbanning user: {e}")
+            await message.answer("❌ Ошибка при разблокировке пользователя")
 
 
 # Регистрация обработчика
-@dp.message_handler(AdminFilter(), commands=['unban_user'])
+@dp.message_handler(commands=['unban_user'], chat_type='private')
 async def unban_user_cmd(message: types.Message):
     await UnbanUserCommand.handle(message)

@@ -7,15 +7,18 @@ from data.config import config
 from loader import dp
 from keyboards.inline.keyboards import MainKeyboards
 from models.user import User, UserSettings, UserStats
+from handlers.base_handler import BaseCommandHandler
 
 logger = logging.getLogger(__name__)
 
 
-class StartCommand:
+class StartCommandHandler(BaseCommandHandler):
     """Обработчик команды /start"""
     
-    @staticmethod
-    async def handle(message: types.Message):
+    def get_command(self) -> str:
+        return "start"
+    
+    async def handle(self, message: types.Message):
         """Обработчик команды /start"""
         user_id = message.from_user.id
         username = message.from_user.username
@@ -24,15 +27,15 @@ class StartCommand:
         logger.info(f"User {user_id} (@{username}) started the bot")
         
         # Создаем или обновляем пользователя в БД
-        await StartCommand._create_or_update_user(message.from_user)
+        await self._create_or_update_user(message.from_user)
         
         # Приветственное сообщение
-        welcome_text = StartCommand._get_welcome_text(first_name)
+        welcome_text = self._get_welcome_text(first_name)
         
         # Проверяем, является ли пользователь администратором
         if user_id in config.admin.owner_ids:
             # Админская панель
-            admin_text = StartCommand._get_admin_text(username, user_id)
+            admin_text = self._get_admin_text(username, user_id)
             await message.answer(
                 admin_text,
                 parse_mode=ParseMode.HTML,
@@ -46,8 +49,7 @@ class StartCommand:
                 reply_markup=MainKeyboards.get_main_keyboard()
             )
     
-    @staticmethod
-    async def _create_or_update_user(user: types.User):
+    async def _create_or_update_user(self, user: types.User):
         """Создает или обновляет пользователя в базе данных"""
         try:
             # Проверяем, существует ли пользователь
@@ -58,7 +60,9 @@ class StartCommand:
                 db_user.username = user.username
                 db_user.first_name = user.first_name
                 db_user.last_name = user.last_name
+                db_user.language_code = user.language_code
                 db_user.updated_at = datetime.now()
+                db_user.last_activity = datetime.now()
                 db_user.save()
                 logger.info(f"Updated user {user.id} in database")
             else:
@@ -68,8 +72,11 @@ class StartCommand:
                     username=user.username,
                     first_name=user.first_name,
                     last_name=user.last_name,
+                    language_code=user.language_code,
+                    is_bot=user.is_bot,
                     created_at=datetime.now(),
-                    updated_at=datetime.now()
+                    updated_at=datetime.now(),
+                    last_activity=datetime.now()
                 )
                 
                 # Создаем настройки пользователя
@@ -83,47 +90,50 @@ class StartCommand:
         except Exception as e:
             logger.error(f"Error creating/updating user {user.id}: {e}")
     
-    @staticmethod
-    def _get_welcome_text(first_name: str) -> str:
+    def _get_welcome_text(self, first_name: str) -> str:
         """Генерирует приветственный текст"""
         return f"""
-🎉 <b>Добро пожаловать, {first_name}!</b>
+<b>👋 Привет, {first_name}!</b>
 
-Я - {config.bot.name}, ваш персональный помощник.
+Добро пожаловать в бота! 🤖
 
-<b>Что я умею:</b>
-• Помогать с различными задачами
-• Предоставлять полезную информацию
-• Отвечать на ваши вопросы
-• И многое другое!
+<b>Доступные команды:</b>
+• /start - Главное меню
+• /help - Справка
+• /profile - Ваш профиль
+• /settings - Настройки
+• /about - О боте
 
-<b>Поддержка:</b> {config.bot.support}
+<b>Поддержка:</b> @support_username
 
-Используйте /help для получения справки или /menu для главного меню.
+<i>Используйте кнопки ниже для навигации</i>
 """
     
-    @staticmethod
-    def _get_admin_text(username: str, user_id: int) -> str:
+    def _get_admin_text(self, username: str, user_id: int) -> str:
         """Генерирует текст для администратора"""
         return f"""
-👑 <b>Панель администратора</b>
+<b>👑 Панель администратора</b>
 
-Добро пожаловать, {username}!
+<b>Добро пожаловать, {username}!</b>
 
 <b>Ваш ID:</b> <code>{user_id}</code>
-<b>Роль:</b> Администратор
 
-<b>Доступные действия:</b>
-• Управление пользователями
-• Просмотр статистики
-• Настройка бота
-• Модерация
+<b>Админские команды:</b>
+• /ban_user - Забанить пользователя
+• /unban_user - Разбанить пользователя
+• /warn_user - Предупредить пользователя
+• /stats - Статистика бота
+• /users - Список пользователей
+• /broadcast - Отправить сообщение всем
 
-Используйте кнопки ниже для навигации.
+<b>Обычные команды:</b>
+• /profile - Ваш профиль
+• /settings - Настройки
+• /help - Справка
+
+<i>Используйте кнопки ниже для управления</i>
 """
 
 
-# Регистрация обработчика
-@dp.message_handler(commands=['start'], chat_type='private')
-async def start_cmd(message: types.Message):
-    await StartCommand.handle(message)
+# Создаем экземпляр хэндлера для автоматической регистрации
+start_handler = StartCommandHandler(dp)

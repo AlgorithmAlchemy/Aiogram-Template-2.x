@@ -6,7 +6,7 @@ from datetime import datetime
 from data.config import config
 from loader import dp
 from models.user import User
-from filters.admin_filter import AdminFilter
+
 
 logger = logging.getLogger(__name__)
 
@@ -34,16 +34,18 @@ class UsersCommand:
                     f"{status} <b>{user.first_name}</b> "
                     f"(ID: <code>{user.user_id}</code>)\n"
                     f"Username: {username}\n"
-                    f"Зарегистрирован: {user.created_at.strftime('%d.%m.%Y')}\n"
+                    f"Зарегистрирован: "
+                    f"{user.created_at.strftime('%d.%m.%Y')}\n"
                     f"Предупреждений: {user.warnings}\n\n"
                 )
             
             # Добавляем общую статистику
             total_users = User.select().count()
+            today_start = datetime.now().replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
             active_users = User.select().where(
-                User.last_activity >= datetime.now().replace(
-                    hour=0, minute=0, second=0, microsecond=0
-                )
+                User.last_activity >= today_start
             ).count()
             
             users_text += f"""
@@ -51,7 +53,7 @@ class UsersCommand:
 • Всего пользователей: {total_users}
 • Активных сегодня: {active_users}
 
-<i>Показаны последние 10 зарегистрированных пользователей.</i>
+<i>Показаны последние 10 зарегистрированных пользователей</i>
 """
             
             await message.answer(
@@ -65,6 +67,6 @@ class UsersCommand:
 
 
 # Регистрация обработчика
-@dp.message_handler(AdminFilter(), commands=['users'])
+@dp.message_handler(commands=['users'], chat_type='private')
 async def users_cmd(message: types.Message):
     await UsersCommand.handle(message)
