@@ -23,6 +23,12 @@
 ├── handlers/                  # Обработчики
 │   ├── base_handler.py       # Базовые классы хэндлеров
 │   └── users/message/commands/ # Команды пользователей
+├── middleware/                # Middleware
+│   ├── base.py               # Базовый класс middleware
+│   ├── logging.py            # Логирование
+│   ├── throttling.py         # Ограничение частоты
+│   ├── admin.py              # Проверка админов
+│   └── database.py           # Работа с БД
 ├── utils/                     # Утилиты
 ├── filters/                   # Фильтры
 ├── states/                    # FSM состояния
@@ -75,6 +81,62 @@ async def register_handlers(self):
         ProfileCommandHandler(self.dp),
         # ... другие хэндлеры
     ]
+```
+
+## Middleware
+
+### Базовый класс
+
+```python
+class BaseCustomMiddleware(BaseMiddleware):
+    """Базовый класс для всех middleware"""
+    
+    async def __call__(self, handler, event, data):
+        start_time = time.time()
+        
+        try:
+            # Предобработка
+            await self.pre_process(event, data)
+            
+            # Выполнение обработчика
+            result = await handler(event, data)
+            
+            # Постобработка
+            await self.post_process(event, data, result)
+            
+            return result
+        except Exception as e:
+            logger.error(f"Error in {self.name}: {e}")
+            raise
+```
+
+### Примеры middleware
+
+```python
+class LoggingMiddleware(BaseCustomMiddleware):
+    """Middleware для логирования"""
+    
+    async def pre_process(self, event, data):
+        logger.info(f"Message from {event.from_user.id}")
+
+class AdminMiddleware(BaseCustomMiddleware):
+    """Middleware для проверки админов"""
+    
+    async def pre_process(self, event, data):
+        is_admin = event.from_user.id in config.admin.owner_ids
+        data['is_admin'] = is_admin
+```
+
+### Использование в хэндлерах
+
+```python
+@dp.message_handler(commands=['test'])
+async def test_handler(message: types.Message, data: dict):
+    # Данные из middleware
+    is_admin = data.get('is_admin', False)
+    db_user = data.get('db_user')
+    
+    await message.answer(f"Admin: {is_admin}")
 ```
 
 ## ООП подход для хэндлеров
