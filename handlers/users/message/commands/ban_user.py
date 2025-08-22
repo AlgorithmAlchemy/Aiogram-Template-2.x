@@ -5,32 +5,29 @@ import logging
 from data.config import config
 from loader import dp
 from models.user import User
-from filters.admin_filter import AdminFilter
+from handlers.base_handler import BaseCommandHandler
 
 logger = logging.getLogger(__name__)
 
 
-class BanUserCommand:
+class BanUserCommandHandler(BaseCommandHandler):
     """Обработчик команды /ban_user"""
     
-    @staticmethod
-    async def handle(message: types.Message):
+    def get_command(self) -> str:
+        return "ban_user"
+    
+    async def handle(self, message: types.Message):
         """Обработчик команды /ban_user"""
         if message.from_user.id not in config.admin.owner_ids:
             await message.answer("❌ У вас нет прав администратора!")
             return
         
-        # Проверяем, есть ли аргументы
+        # Получаем аргументы команды
         args = message.get_args().split()
         if not args:
             await message.answer(
-                "🚫 <b>Бан пользователя</b>\n\n"
-                "Использование: <code>/ban_user [ID/username] [причина]</code>\n\n"
-                "Примеры:\n"
-                "<code>/ban_user 123456789</code>\n"
-                "<code>/ban_user @username</code>\n"
-                "<code>/ban_user 123456789 Нарушение правил</code>",
-                parse_mode=ParseMode.HTML
+                "❌ Укажите ID или username пользователя!\n"
+                "Пример: /ban_user 123456789 или /ban_user @username"
             )
             return
         
@@ -71,7 +68,14 @@ class BanUserCommand:
             
             # Проверяем, не пытается ли админ забанить другого админа
             if user_id in config.admin.owner_ids:
-                await message.answer("❌ Вы не можете забанить другого администратора!")
+                await message.answer(
+                    "❌ Вы не можете забанить другого администратора!"
+                )
+                return
+            
+            # Проверяем, не забанен ли уже пользователь
+            if user.is_banned:
+                await message.answer("❌ Пользователь уже заблокирован!")
                 return
             
             # Баним пользователя
@@ -79,26 +83,32 @@ class BanUserCommand:
             
             # Логируем действие
             logger.info(
-                f"Admin {message.from_user.id} banned user {user_id}. "
-                f"Reason: {reason}"
+                f"Admin {message.from_user.id} banned user {user_id} "
+                f"for reason: {reason}"
             )
             
+            # Отправляем подтверждение
+            ban_text = f"""
+<b>🚫 Пользователь заблокирован</b>
+
+<b>ID:</b> <code>{user_id}</code>
+<b>Имя:</b> {user.first_name}
+<b>Username:</b> @{user.username or 'Не указан'}
+<b>Причина:</b> {reason}
+<b>Администратор:</b> {message.from_user.first_name}
+
+<i>Пользователь больше не сможет использовать бота</i>
+"""
+            
             await message.answer(
-                f"✅ <b>Пользователь забанен</b>\n\n"
-                f"<b>ID:</b> <code>{user_id}</code>\n"
-                f"<b>Имя:</b> {user.first_name}\n"
-                f"<b>Username:</b> @{user.username or 'Не указан'}\n"
-                f"<b>Причина:</b> {reason}\n"
-                f"<b>Забанил:</b> {message.from_user.first_name}",
+                ban_text,
                 parse_mode=ParseMode.HTML
             )
             
         except Exception as e:
-            logger.error(f"Error banning user {target}: {e}")
-            await message.answer("❌ Произошла ошибка при бане пользователя!")
+            logger.error(f"Error banning user: {e}")
+            await message.answer("❌ Ошибка при блокировке пользователя")
 
 
-# Регистрация обработчика
-@dp.message_handler(AdminFilter(), commands=['ban_user'])
-async def ban_user_cmd(message: types.Message):
-    await BanUserCommand.handle(message)
+# Создаем экземпляр хэндлера для автоматической регистрации
+ban_user_handler = BanUserCommandHandler(dp)
