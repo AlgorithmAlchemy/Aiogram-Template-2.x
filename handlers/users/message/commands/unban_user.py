@@ -5,15 +5,18 @@ import logging
 from data.config import config
 from loader import dp
 from models.user import User
+from handlers.base_handler import BaseCommandHandler
 
 logger = logging.getLogger(__name__)
 
 
-class UnbanUserCommand:
+class UnbanUserCommandHandler(BaseCommandHandler):
     """Обработчик команды /unban_user"""
     
-    @staticmethod
-    async def handle(message: types.Message):
+    def get_command(self) -> str:
+        return "unban_user"
+    
+    async def handle(self, message: types.Message):
         """Обработчик команды /unban_user"""
         if message.from_user.id not in config.admin.owner_ids:
             await message.answer("❌ У вас нет прав администратора!")
@@ -97,7 +100,5 @@ class UnbanUserCommand:
             await message.answer("❌ Ошибка при разблокировке пользователя")
 
 
-# Регистрация обработчика
-@dp.message_handler(commands=['unban_user'], chat_type='private')
-async def unban_user_cmd(message: types.Message):
-    await UnbanUserCommand.handle(message)
+# Создаем экземпляр хэндлера для автоматической регистрации
+unban_user_handler = UnbanUserCommandHandler(dp)

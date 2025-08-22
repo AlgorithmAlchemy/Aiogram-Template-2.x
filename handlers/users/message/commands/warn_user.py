@@ -5,15 +5,18 @@ import logging
 from data.config import config
 from loader import dp
 from models.user import User
+from handlers.base_handler import BaseCommandHandler
 
 logger = logging.getLogger(__name__)
 
 
-class WarnUserCommand:
+class WarnUserCommandHandler(BaseCommandHandler):
     """Обработчик команды /warn_user"""
     
-    @staticmethod
-    async def handle(message: types.Message):
+    def get_command(self) -> str:
+        return "warn_user"
+    
+    async def handle(self, message: types.Message):
         """Обработчик команды /warn_user"""
         if message.from_user.id not in config.admin.owner_ids:
             await message.answer("❌ У вас нет прав администратора!")
@@ -110,7 +113,5 @@ class WarnUserCommand:
             await message.answer("❌ Ошибка при предупреждении пользователя")
 
 
-# Регистрация обработчика
-@dp.message_handler(commands=['warn_user'], chat_type='private')
-async def warn_user_cmd(message: types.Message):
-    await WarnUserCommand.handle(message)
+# Создаем экземпляр хэндлера для автоматической регистрации
+warn_user_handler = WarnUserCommandHandler(dp)

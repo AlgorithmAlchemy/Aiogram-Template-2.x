@@ -4,15 +4,18 @@ import logging
 
 from loader import dp
 from models.user import User, UserStats
+from handlers.base_handler import BaseMessageHandler
 
 logger = logging.getLogger(__name__)
 
 
-class EchoHandler:
+class EchoMessageHandler(BaseMessageHandler):
     """Обработчик эхо-сообщений"""
     
-    @staticmethod
-    async def handle(message: types.Message):
+    def get_content_types(self) -> list:
+        return ['text']
+    
+    async def handle(self, message: types.Message):
         """Обработчик всех текстовых сообщений"""
         user = message.from_user
         
@@ -47,7 +50,5 @@ class EchoHandler:
             await message.answer("❌ Произошла ошибка при обработке сообщения")
 
 
-# Регистрация обработчика
-@dp.message_handler(content_types=['text'], chat_type='private')
-async def echo_handler(message: types.Message):
-    await EchoHandler.handle(message)
+# Создаем экземпляр хэндлера для автоматической регистрации
+echo_handler = EchoMessageHandler(dp)
