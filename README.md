@@ -265,10 +265,7 @@ cp -r your_old_project backup/
 - [Peewee](https://github.com/coleifer/peewee) - легкий ORM
 - Сообщество разработчиков Telegram ботов
 
-## 📞 Поддержка
-
-- 📧 Email: your-email@example.com
-- 💬 Telegram: @your_username
+## 📞 Поддержкаe
 - 🐛 Issues: [GitHub Issues](https://github.com/your-username/aiogram-template/issues)
 
 ---
