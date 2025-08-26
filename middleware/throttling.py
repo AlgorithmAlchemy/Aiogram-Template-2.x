@@ -1,6 +1,3 @@
-"""
-Middleware для ограничения частоты запросов
-"""
 import time
 import logging
 from typing import Any, Dict

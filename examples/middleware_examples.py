@@ -1,6 +1,3 @@
-"""
-Примеры использования middleware
-"""
 import logging
 from aiogram import Dispatcher
 from middleware.base import BaseCustomMiddleware

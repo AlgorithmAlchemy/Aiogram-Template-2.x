@@ -1,6 +1,3 @@
-"""
-Базовый класс для API оберток
-"""
 import aiohttp
 import logging
 from typing import Any, Dict, Optional

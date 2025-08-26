@@ -1,6 +1,3 @@
-"""
-Загрузчик бота - базовая инициализация
-"""
 from typing import Tuple, Optional
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage

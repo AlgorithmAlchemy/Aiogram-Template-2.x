@@ -1,6 +1,3 @@
-"""
-Примеры использования ООП подхода для хэндлеров
-"""
 from aiogram import types
 from aiogram.types import ParseMode
 import logging

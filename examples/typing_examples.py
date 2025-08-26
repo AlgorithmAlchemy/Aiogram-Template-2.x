@@ -1,6 +1,3 @@
-"""
-Примеры правильной типизации для всех компонентов проекта
-"""
 from typing import List, Dict, Optional, Any, Union, TypeVar, Callable, Awaitable
 from datetime import datetime
 import logging

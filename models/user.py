@@ -1,6 +1,3 @@
-"""
-Модели пользователей
-"""
 from peewee import (
     IntegerField, CharField, BooleanField, DateTimeField, 
     ForeignKeyField, TextField, DecimalField, DateField

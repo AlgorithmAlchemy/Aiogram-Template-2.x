@@ -1,6 +1,3 @@
-"""
-Настройки подключения к базе данных SQLite
-"""
 import os
 import logging
 from peewee import SqliteDatabase

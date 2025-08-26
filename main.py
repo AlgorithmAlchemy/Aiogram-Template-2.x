@@ -1,6 +1,3 @@
-"""
-Главная точка входа в приложение
-"""
 import asyncio
 import logging
 from datetime import datetime

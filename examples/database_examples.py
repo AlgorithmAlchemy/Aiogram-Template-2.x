@@ -1,6 +1,3 @@
-"""
-Примеры правильных запросов к базе данных с использованием Peewee ORM
-"""
 from datetime import datetime, timedelta
 from models.user import User, UserSettings, UserStats
 from models.sqlite3_creator import connect

@@ -1,6 +1,3 @@
-"""
-Базовая модель для всех таблиц
-"""
 from peewee import Model, DateTimeField, BooleanField
 from datetime import datetime
 from typing import List, Optional, Type, TypeVar, Any

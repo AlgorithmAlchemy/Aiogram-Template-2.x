@@ -1,6 +1,3 @@
-"""
-Примеры использования улучшенной архитектуры базы данных
-"""
 from datetime import datetime, timedelta
 from models.user import (
     User, UserSettings, UserStats, UserWarning, 

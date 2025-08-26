@@ -1,6 +1,3 @@
-"""
-Примеры использования loader
-"""
 import logging
 from loader import bot, dp, loader, config
 

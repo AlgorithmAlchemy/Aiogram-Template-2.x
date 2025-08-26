@@ -1,6 +1,3 @@
-"""
-Middleware для логирования
-"""
 import logging
 from typing import Any, Awaitable, Callable, Dict
 from aiogram.types import Message, CallbackQuery

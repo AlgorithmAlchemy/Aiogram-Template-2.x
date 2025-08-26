@@ -1,6 +1,3 @@
-"""
-Создание таблиц базы данных с использованием Peewee ORM
-"""
 from peewee import *
 from database.connection import db
 from models.base import BaseModel

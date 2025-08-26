@@ -1,6 +1,3 @@
-"""
-Базовый класс для всех middleware
-"""
 import logging
 import time
 from typing import Any, Awaitable, Callable, Dict, Union

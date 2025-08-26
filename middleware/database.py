@@ -1,6 +1,3 @@
-"""
-Middleware для работы с базой данных
-"""
 import logging
 from typing import Any, Dict
 from aiogram.types import Message, CallbackQuery

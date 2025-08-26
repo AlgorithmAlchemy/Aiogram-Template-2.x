@@ -1,14 +1,3 @@
-"""
-Примеры использования всех компонентов шаблона
-
-Этот файл демонстрирует, как использовать различные возможности шаблона:
-- FSM состояния
-- API wrappers
-- Middleware
-- Event hooks
-- Команды
-"""
-
 import asyncio
 from aiogram import types
 from aiogram.dispatcher import FSMContext

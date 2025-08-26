@@ -1,6 +1,3 @@
-"""
-Примеры использования команд модерации
-"""
 from models.user import User
 from models.sqlite3_creator import connect
 import logging

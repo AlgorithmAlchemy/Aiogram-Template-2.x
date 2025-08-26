@@ -1,6 +1,3 @@
-"""
-Примеры использования API
-"""
 import asyncio
 import logging
 from api.weather import WeatherAPIWrapper

@@ -1,6 +1,3 @@
-"""
-Система миграций для базы данных
-"""
 import os
 import json
 from datetime import datetime

@@ -1,6 +1,3 @@
-"""
-API обертка для валют
-"""
 import logging
 from typing import Dict, Any
 from api.base import BaseAPIWrapper

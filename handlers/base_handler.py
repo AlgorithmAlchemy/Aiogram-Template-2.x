@@ -1,6 +1,3 @@
-"""
-Базовые классы для хэндлеров
-"""
 from abc import ABC, abstractmethod
 from typing import List
 from aiogram import types
