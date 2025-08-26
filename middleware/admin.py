@@ -1,6 +1,3 @@
-"""
-Middleware для проверки прав администратора
-"""
 import logging
 from typing import Any, Dict
 from aiogram.types import Message, CallbackQuery
