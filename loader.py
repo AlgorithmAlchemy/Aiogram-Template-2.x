@@ -1,10 +1,11 @@
+import logging
 from typing import Tuple, Optional
+
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
 from data.config import config
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ class BotLoader:
         """Инициализация диспетчера"""
         if self.bot is None or self.storage is None:
             raise RuntimeError("Bot and storage must be initialized first")
-        
+
         self.dp = Dispatcher(self.bot, storage=self.storage)
         logger.info("Dispatcher initialized")
 

@@ -1,5 +1,6 @@
-import os
 import logging
+import os
+
 from peewee import SqliteDatabase
 
 logger = logging.getLogger(__name__)

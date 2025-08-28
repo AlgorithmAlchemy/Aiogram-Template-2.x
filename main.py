@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from datetime import datetime
 from typing import List, Optional
@@ -6,10 +5,10 @@ from typing import List, Optional
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 
-from loader import bot, dp
 from data.config import config
-from models.sqlite3_creator import DatabaseManager
+from loader import bot, dp
 from models.migrations import MigrationManager
+from models.sqlite3_creator import DatabaseManager
 
 # Настройка логирования
 logging.basicConfig(
@@ -36,16 +35,16 @@ def db_connect() -> None:
     try:
         # Создаем менеджер базы данных
         db_manager = DatabaseManager()
-        
+
         # Создаем таблицы
         db_manager.create_tables()
         logger.info("Database tables created successfully")
-        
+
         # Применяем миграции
         migration_manager = MigrationManager()
         migration_manager.migrate()
         logger.info("Database migrations applied successfully")
-        
+
     except Exception as e:
         logger.error(f"Database connection error: {e}")
         raise
@@ -144,19 +143,19 @@ class BotManager:
             from middleware.throttling import ThrottlingMiddleware
             from middleware.admin import AdminMiddleware
             from middleware.database import DatabaseMiddleware
-            
+
             # Базовое логирование
             self.dp.middleware.setup(LoggingMiddleware())
-            
+
             # Ограничение частоты запросов
             self.dp.middleware.setup(ThrottlingMiddleware(rate_limit=0.5))
-            
+
             # Проверка администраторов
             self.dp.middleware.setup(AdminMiddleware())
-            
+
             # Работа с базой данных
             self.dp.middleware.setup(DatabaseMiddleware())
-            
+
             logger.info("Custom middleware registered successfully")
         except Exception as e:
             logger.error(f"Error setting up middleware: {e}")
@@ -176,8 +175,8 @@ class BotManager:
         try:
             @self.dp.errors_handler()
             async def errors_handler(
-                update: types.Update, 
-                exception: Exception
+                    update: types.Update,
+                    exception: Exception
             ) -> bool:
                 """Глобальный обработчик ошибок"""
                 logger.error(f"Update: {update}")
@@ -199,11 +198,11 @@ setup_logging()
 # Запуск бота
 if __name__ == '__main__':
     logger.info("Starting bot...")
-    
+
     # Настройка allowed_updates для aiogram 2.x
     allowed_updates = [
         'message',
-        'edited_message', 
+        'edited_message',
         'channel_post',
         'edited_channel_post',
         'inline_query',
@@ -217,7 +216,7 @@ if __name__ == '__main__':
         'chat_member',
         'chat_join_request'
     ]
-    
+
     executor.start_polling(
         dispatcher=dp,
         on_startup=bot_manager.on_startup,

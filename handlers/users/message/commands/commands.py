@@ -1,17 +1,18 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 
+from aiogram import types
+from aiogram.types import ParseMode
+
 from data.config import config
-from loader import dp
 from keyboards.inline.keyboards import UtilityKeyboards
+from loader import dp
 
 logger = logging.getLogger(__name__)
 
 
 class CommandsCommand:
     """Обработчик команды /commands"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /commands - показывает все команды"""
@@ -46,7 +47,7 @@ class CommandsCommand:
 
 <b>Поддержка:</b> {config.bot.support}
 """
-        
+
         await message.answer(
             commands_text,
             parse_mode=ParseMode.HTML,

@@ -73,31 +73,37 @@ python main.py
 ## 🏗️ Архитектура
 
 ### Loader (loader.py)
+
 Базовый загрузчик для инициализации бота:
+
 - Настройка хранилища (Memory/Redis)
 - Создание экземпляра бота
 - Создание диспетчера
 
 ### BotManager (main.py)
+
 Центральный класс для управления жизненным циклом:
+
 - Подключение к БД
 - Регистрация хэндлеров
 - Настройка middleware
 - Управление запуском/остановкой
 
 ### ООП Хэндлеры
+
 Все хэндлеры наследуются от базовых классов:
 
 ```python
 class StartCommandHandler(BaseCommandHandler):
     def get_command(self) -> str:
         return "start"
-    
+
     async def handle(self, message: types.Message):
         await message.answer("Привет!")
 ```
 
 ### Middleware
+
 Правильная структура middleware с базовыми классами:
 
 ```python
@@ -107,6 +113,7 @@ class LoggingMiddleware(BaseCustomMiddleware):
 ```
 
 ### API Архитектура
+
 Асинхронные обертки для внешних API:
 
 ```python
@@ -123,15 +130,18 @@ async with WeatherAPIWrapper() as api:
 from handlers.base_handler import BaseCommandHandler
 from aiogram import types
 
+
 class MyCommandHandler(BaseCommandHandler):
     def get_command(self) -> str:
         return "mycommand"
-    
+
     async def handle(self, message: types.Message):
         await message.answer("Мой хэндлер!")
 
+
 # main.py
 from handlers.users.message.commands.mycommand import MyCommandHandler
+
 MyCommandHandler(self.dp),
 ```
 
@@ -141,13 +151,15 @@ MyCommandHandler(self.dp),
 # api/custom.py
 from api.base import BaseAPIWrapper
 
+
 class CustomAPIWrapper(BaseAPIWrapper):
     def __init__(self):
         super().__init__(base_url="https://api.example.com")
-    
+
     async def make_request(self, method, endpoint, data=None):
         # Ваша логика
         pass
+
 
 # Использование
 async with CustomAPIWrapper() as api:
@@ -266,6 +278,7 @@ cp -r your_old_project backup/
 - Сообщество разработчиков Telegram ботов
 
 ## 📞 Поддержкаe
+
 - 🐛 Issues: [GitHub Issues](https://github.com/your-username/aiogram-template/issues)
 
 ---

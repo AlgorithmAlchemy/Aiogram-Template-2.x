@@ -1,8 +1,9 @@
+import logging
 from abc import ABC, abstractmethod
 from typing import List
+
 from aiogram import types
 from aiogram.dispatcher import Dispatcher
-import logging
 
 logger = logging.getLogger(__name__)
 

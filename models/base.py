@@ -1,6 +1,8 @@
-from peewee import Model, DateTimeField, BooleanField
 from datetime import datetime
 from typing import List, Optional, Type, TypeVar, Any
+
+from peewee import Model, DateTimeField, BooleanField
+
 from database.connection import db
 
 T = TypeVar('T', bound='BaseModel')
@@ -11,15 +13,15 @@ class BaseModel(Model):
 
     # Общие поля для всех таблиц
     created_at: DateTimeField = DateTimeField(
-        default=datetime.now, 
+        default=datetime.now,
         verbose_name='Дата создания'
     )
     updated_at: DateTimeField = DateTimeField(
-        default=datetime.now, 
+        default=datetime.now,
         verbose_name='Дата обновления'
     )
     is_active: BooleanField = BooleanField(
-        default=True, 
+        default=True,
         verbose_name='Активен'
     )
 
@@ -64,14 +66,14 @@ class BaseModel(Model):
     def exists_active(cls: Type[T], id_value: int) -> bool:
         """Проверка существования активной записи"""
         return cls.select().where(
-            cls.id == id_value, 
+            cls.id == id_value,
             cls.is_active
         ).exists()
-    
+
     def __str__(self):
         """Строковое представление модели"""
         return f"{self.__class__.__name__}(id={getattr(self, 'id', 'N/A')})"
-    
+
     def __repr__(self):
         """Представление для отладки"""
         return self.__str__()

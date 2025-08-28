@@ -1,22 +1,23 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 
+from aiogram import types
+from aiogram.types import ParseMode
+
 from data.config import config
-from loader import dp
 from keyboards.inline.keyboards import UtilityKeyboards
+from loader import dp
 
 logger = logging.getLogger(__name__)
 
 
 class HelpCommand:
     """Обработчик команды /help"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /help"""
         user_id = message.from_user.id
-        
+
         # Проверяем, является ли пользователь администратором
         if user_id in config.admin.owner_ids:
             await message.answer(

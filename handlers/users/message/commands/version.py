@@ -1,7 +1,8 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 from datetime import datetime
+
+from aiogram import types
+from aiogram.types import ParseMode
 
 from data.config import config
 from loader import dp
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class VersionCommand:
     """Обработчик команды /version"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /version - версия бота"""
@@ -30,7 +31,7 @@ class VersionCommand:
 • SQLite + Peewee ORM
 • APScheduler для задач
 """
-        
+
         await message.answer(
             version_text,
             parse_mode=ParseMode.HTML

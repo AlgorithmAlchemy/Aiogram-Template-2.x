@@ -179,15 +179,15 @@ class BaseCommandHandler(ABC):
     def __init__(self, dp: Dispatcher):
         self.dp = dp
         self.register_handlers()
-    
+
     @abstractmethod
     def get_command(self) -> str:
         pass
-    
+
     @abstractmethod
     async def handle(self, message: types.Message):
         pass
-    
+
     def register_handlers(self):
         self.dp.register_message_handler(
             self.handle,
@@ -202,7 +202,7 @@ class BaseCommandHandler(ABC):
 class StartCommandHandler(BaseCommandHandler):
     def get_command(self) -> str:
         return "start"
-    
+
     async def handle(self, message: types.Message):
         # Логика обработки команды
         await message.answer("Привет!")
@@ -262,21 +262,25 @@ class MigrationManager:
 ## Преимущества новой архитектуры
 
 ### 1. **Явная регистрация**
+
 - Все хэндлеры регистрируются в одном месте
 - Нет скрытых зависимостей
 - Легко понять, какие хэндлеры активны
 
 ### 2. **Единая точка входа**
+
 - main.py содержит всю логику запуска
 - Четкое разделение ответственности
 - Простота отладки
 
 ### 3. **ООП подход**
+
 - Единый стиль для всех хэндлеров
 - Автоматическая регистрация при создании
 - Легкое наследование и расширение
 
 ### 4. **Улучшенная БД**
+
 - Система миграций
 - История модерации
 - Мягкое удаление
@@ -284,17 +288,20 @@ class MigrationManager:
 - Правильная структура подключения
 
 ### 5. **API архитектура**
+
 - Базовые классы для API оберток
 - Асинхронные контекстные менеджеры
 - Обработка ошибок
 - Легкое создание новых API
 
 ### 6. **Правильная загрузка**
+
 - Loader отвечает только за базовую инициализацию
 - BotManager управляет жизненным циклом
 - Нет дублирования функциональности
 
 ### 7. **Модульность**
+
 - Каждый компонент независим
 - Легко добавлять новые функции
 - Простота тестирования
@@ -308,12 +315,14 @@ class MigrationManager:
 from handlers.base_handler import BaseCommandHandler
 from aiogram import types
 
+
 class MyCommandHandler(BaseCommandHandler):
     def get_command(self) -> str:
         return "mycommand"
-    
+
     async def handle(self, message: types.Message):
         await message.answer("Мой хэндлер!")
+
 
 # main.py
 from handlers.users.message.commands.mycommand import MyCommandHandler
@@ -361,16 +370,18 @@ migration_manager.migrate()
 # api/custom.py
 from api.base import BaseAPIWrapper
 
+
 class CustomAPIWrapper(BaseAPIWrapper):
     def __init__(self):
         super().__init__(base_url="https://api.example.com")
-    
+
     async def make_request(self, method, endpoint, data=None):
         # Ваша логика
         pass
-    
+
     async def get_data(self):
         return await self.get("data")
+
 
 # Использование
 async with CustomAPIWrapper() as api:
@@ -380,21 +391,25 @@ async with CustomAPIWrapper() as api:
 ## Рекомендации
 
 ### 1. **Создание новых хэндлеров**
+
 - Всегда наследуйтесь от базовых классов
 - Используйте ООП подход
 - Регистрируйте в main.py
 
 ### 2. **Работа с БД**
+
 - Используйте методы моделей
 - Создавайте миграции для изменений схемы
 - Применяйте мягкое удаление
 
 ### 3. **Структура кода**
+
 - Следуйте принципу единственной ответственности
 - Избегайте скрытых зависимостей
 - Документируйте сложную логику
 
 ### 4. **Тестирование**
+
 - Тестируйте каждый компонент отдельно
 - Используйте моки для внешних зависимостей
 - Проверяйте интеграцию компонентов

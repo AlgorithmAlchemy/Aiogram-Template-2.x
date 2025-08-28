@@ -1,7 +1,8 @@
-import aiohttp
 import logging
-from typing import Any, Dict, Optional
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional
+
+import aiohttp
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +23,10 @@ class BaseAPIWrapper(ABC):
         return self
 
     async def __aexit__(
-        self, 
-        exc_type: Any, 
-        exc_val: Any, 
-        exc_tb: Any
+            self,
+            exc_type: Any,
+            exc_val: Any,
+            exc_tb: Any
     ) -> None:
         """Асинхронный контекстный менеджер - выход"""
         if self.session:
@@ -33,10 +34,10 @@ class BaseAPIWrapper(ABC):
 
     @abstractmethod
     async def make_request(
-        self, 
-        method: str, 
-        endpoint: str, 
-        data: Optional[Dict[str, Any]] = None
+            self,
+            method: str,
+            endpoint: str,
+            data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """Абстрактный метод для выполнения запросов"""
         pass
@@ -46,17 +47,17 @@ class BaseAPIWrapper(ABC):
         return await self.make_request('GET', endpoint)
 
     async def post(
-        self, 
-        endpoint: str, 
-        data: Optional[Dict[str, Any]] = None
+            self,
+            endpoint: str,
+            data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """POST запрос"""
         return await self.make_request('POST', endpoint, data)
 
     async def put(
-        self, 
-        endpoint: str, 
-        data: Optional[Dict[str, Any]] = None
+            self,
+            endpoint: str,
+            data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """PUT запрос"""
         return await self.make_request('PUT', endpoint, data)

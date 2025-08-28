@@ -3,25 +3,22 @@
 """
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
 
-from data.config import config
+from keyboards.inline.keyboards import MainKeyboards
+from loader import dp
 from models.user import User, UserSettings, UserStats
 from states.user.registration import RegistrationStates
-from keyboards.inline.keyboards import MainKeyboards
-
-from loader import dp
 
 
 class RegisterCommand:
     """Команда регистрации пользователя"""
-    
+
     @staticmethod
     @dp.message_handler(commands=['register'])
     async def handle(message: types.Message, state: FSMContext):
         """Обработчик команды /register"""
         user_id = message.from_user.id
-        
+
         # Проверяем, не зарегистрирован ли уже пользователь
         user, created = User.get_or_create(
             user_id=user_id,
@@ -33,36 +30,36 @@ class RegisterCommand:
                 'is_bot': message.from_user.is_bot
             }
         )
-        
+
         if not created:
             await message.answer(
                 "Вы уже зарегистрированы! Используйте /profile для просмотра профиля."
             )
             return
-        
+
         # Создаем настройки и статистику для нового пользователя
         UserSettings.create(user=user)
         UserStats.create(user=user)
-        
+
         # Начинаем процесс регистрации
         await state.set_state(RegistrationStates.waiting_for_name)
-        
+
         await message.answer(
             "Добро пожаловать! Давайте завершим регистрацию.\n\n"
             "Как вас зовут? (введите ваше полное имя)"
         )
-    
+
     @staticmethod
     @dp.message_handler(state=RegistrationStates.waiting_for_name)
     async def process_name(message: types.Message, state: FSMContext):
         """Обработка введенного имени"""
         await state.update_data(name=message.text)
         await state.set_state(RegistrationStates.waiting_for_age)
-        
+
         await message.answer(
             f"Отлично, {message.text}! Теперь укажите ваш возраст:"
         )
-    
+
     @staticmethod
     @dp.message_handler(state=RegistrationStates.waiting_for_age)
     async def process_age(message: types.Message, state: FSMContext):
@@ -72,37 +69,37 @@ class RegisterCommand:
             if age < 1 or age > 120:
                 await message.answer("Пожалуйста, введите корректный возраст (1-120):")
                 return
-            
+
             await state.update_data(age=age)
             await state.set_state(RegistrationStates.waiting_for_city)
-            
+
             await message.answer(
                 f"Возраст: {age} лет. Теперь укажите ваш город:"
             )
         except ValueError:
             await message.answer("Пожалуйста, введите возраст числом:")
-    
+
     @staticmethod
     @dp.message_handler(state=RegistrationStates.waiting_for_city)
     async def process_city(message: types.Message, state: FSMContext):
         """Обработка введенного города"""
         await state.update_data(city=message.text)
-        
+
         # Получаем все данные
         data = await state.get_data()
-        
+
         # Обновляем пользователя в БД
         user_id = message.from_user.id
         user = User.get(User.user_id == user_id)
-        
+
         # Здесь можно добавить дополнительные поля в модель User
         # user.age = data.get('age')
         # user.city = data.get('city')
         # user.save()
-        
+
         # Завершаем регистрацию
         await state.finish()
-        
+
         await message.answer(
             f"""
 <b>✅ Регистрация завершена!</b>

@@ -1,17 +1,18 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 
+from aiogram import types
+from aiogram.types import ParseMode
+
 from data.config import config
-from loader import dp
 from keyboards.inline.keyboards import UtilityKeyboards
+from loader import dp
 
 logger = logging.getLogger(__name__)
 
 
 class SupportCommand:
     """Обработчик команды /support"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /support - связаться с поддержкой"""
@@ -35,7 +36,7 @@ class SupportCommand:
 
 <i>Не стесняйтесь обращаться!</i>
 """
-        
+
         await message.answer(
             support_text,
             parse_mode=ParseMode.HTML,

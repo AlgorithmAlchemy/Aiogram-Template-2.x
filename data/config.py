@@ -1,6 +1,7 @@
 import os
-from typing import List, Optional
 from dataclasses import dataclass
+from typing import List, Optional
+
 from dotenv import load_dotenv
 
 # Загружаем переменные окружения
@@ -51,12 +52,12 @@ class BotConfig:
     owner: str = os.getenv('BOT_OWNER', '@your_username')
     support: str = os.getenv('SUPPORT_USERNAME', '@support_username')
     timezone: str = os.getenv('TIMEZONE', 'Europe/Moscow')
-    
+
     # Настройки производительности
     max_retries: int = int(os.getenv('MAX_RETRIES', '3'))
     timeout: int = int(os.getenv('TIMEOUT', '30'))
     page_size: int = int(os.getenv('PAGE_SIZE', '10'))
-    
+
     # Настройки webhook (опционально)
     webhook_url: Optional[str] = os.getenv('WEBHOOK_URL')
     webhook_path: str = os.getenv('WEBHOOK_PATH', '/webhook')
@@ -67,7 +68,7 @@ class BotConfig:
 class AdminConfig:
     """Конфигурация администраторов"""
     owner_ids: List[int] = None
-    
+
     def __post_init__(self):
         if self.owner_ids is None:
             owner_ids_str = os.getenv(
@@ -81,18 +82,18 @@ class AdminConfig:
 
 class Config:
     """Основной класс конфигурации"""
-    
+
     def __init__(self):
         self.bot = BotConfig()
         self.admin = AdminConfig()
         self.database = DatabaseConfig()
         self.redis = RedisConfig()
         self.logging = LoggingConfig()
-        
+
         # Дополнительные настройки
         self.chat_id = os.getenv('CHAT_ID', 'YOUR_CHAT_ID_HERE')
         self.debug = os.getenv('DEBUG', 'false').lower() == 'true'
-        
+
         # Тексты справок
         self.admin_help_text = """
 <b>🔧 Панель администратора</b>
@@ -116,7 +117,7 @@ class Config:
 /delete_user - Удалить пользователя из БД
 /user_info - Информация о пользователе
 """
-        
+
         self.help_text = """
 <b>🤖 Помощь по боту</b>
 

@@ -1,8 +1,8 @@
-from typing import List, Dict, Optional, Any, Union, TypeVar, Callable, Awaitable
-from datetime import datetime
 import logging
+from datetime import datetime
+from typing import List, Dict, Optional, Any, Union, TypeVar, Callable, Awaitable
 
-from aiogram import types, Bot, Dispatcher
+from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from peewee import Model
 
@@ -41,7 +41,7 @@ class TypedCommandHandler:
         user_id: int = message.from_user.id
         username: Optional[str] = message.from_user.username
         text: str = message.text or ""
-        
+
         logger.info(f"Message from {user_id}: {text}")
         await message.answer(f"Hello, {username or 'User'}!")
 
@@ -65,7 +65,7 @@ class TypedCallbackHandler:
         """Обработчик callback с типизацией"""
         user_id: int = callback_query.from_user.id
         data: str = callback_query.data or ""
-        
+
         logger.info(f"Callback from {user_id}: {data}")
         await callback_query.answer("Callback processed!")
 
@@ -120,39 +120,39 @@ class TypedMiddleware:
         self.processed_count: int = 0
 
     async def __call__(
-        self,
-        handler: Callable[[types.Message, Dict[str, Any]], Awaitable[Any]],
-        event: Union[types.Message, types.CallbackQuery],
-        data: Dict[str, Any]
+            self,
+            handler: Callable[[types.Message, Dict[str, Any]], Awaitable[Any]],
+            event: Union[types.Message, types.CallbackQuery],
+            data: Dict[str, Any]
     ) -> Any:
         """Вызов middleware с типизацией"""
         self.processed_count += 1
-        
+
         # Предобработка
         await self.pre_process(event, data)
-        
+
         # Выполнение обработчика
         result: Any = await handler(event, data)
-        
+
         # Постобработка
         await self.post_process(event, data, result)
-        
+
         return result
 
     async def pre_process(
-        self, 
-        event: Union[types.Message, types.CallbackQuery], 
-        data: Dict[str, Any]
+            self,
+            event: Union[types.Message, types.CallbackQuery],
+            data: Dict[str, Any]
     ) -> None:
         """Предобработка с типизацией"""
         user_id: int = event.from_user.id
         logger.info(f"Pre-processing for user {user_id}")
 
     async def post_process(
-        self, 
-        event: Union[types.Message, types.CallbackQuery], 
-        data: Dict[str, Any], 
-        result: Any
+            self,
+            event: Union[types.Message, types.CallbackQuery],
+            data: Dict[str, Any],
+            result: Any
     ) -> None:
         """Постобработка с типизацией"""
         user_id: int = event.from_user.id
@@ -172,15 +172,15 @@ class TypedAPIWrapper:
         self.timeout: int = 30
 
     async def make_request(
-        self, 
-        method: str, 
-        endpoint: str, 
-        data: Optional[Dict[str, Any]] = None
+            self,
+            method: str,
+            endpoint: str,
+            data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """Выполнение запроса с типизацией"""
         url: str = f"{self.base_url}/{endpoint}"
         headers: Dict[str, str] = {"Authorization": f"Bearer {self.api_key}"}
-        
+
         # Здесь была бы логика выполнения запроса
         return {
             'success': True,
@@ -193,9 +193,9 @@ class TypedAPIWrapper:
         return await self.make_request('GET', endpoint)
 
     async def post_data(
-        self, 
-        endpoint: str, 
-        data: Dict[str, Any]
+            self,
+            endpoint: str,
+            data: Dict[str, Any]
     ) -> Dict[str, Any]:
         """POST запрос с типизацией"""
         return await self.make_request('POST', endpoint, data)
@@ -215,34 +215,34 @@ class TypedFSMHandler:
         # Здесь был бы переход в состояние
 
     async def process_name(
-        self, 
-        message: types.Message, 
-        state: FSMContext
+            self,
+            message: types.Message,
+            state: FSMContext
     ) -> None:
         """Обработка имени с типизацией"""
         name: str = message.text or ""
         user_id: int = message.from_user.id
-        
+
         # Сохранение данных в состоянии
         await state.update_data(name=name, user_id=user_id)
-        
+
         await message.answer(f"Привет, {name}! Введите ваш возраст:")
         # Здесь был бы переход в следующее состояние
 
     async def process_age(
-        self, 
-        message: types.Message, 
-        state: FSMContext
+            self,
+            message: types.Message,
+            state: FSMContext
     ) -> None:
         """Обработка возраста с типизацией"""
         try:
             age: int = int(message.text or "0")
             data: Dict[str, Any] = await state.get_data()
             name: str = data.get('name', 'Unknown')
-            
+
             await message.answer(f"{name}, ваш возраст: {age}")
             await state.finish()
-            
+
         except ValueError:
             await message.answer("Пожалуйста, введите корректный возраст")
 
@@ -316,31 +316,33 @@ class TypedConfig:
 
 async def example_usage() -> None:
     """Пример использования типизированных компонентов"""
-    
+
     # Создание экземпляров
     config: TypedConfig = TypedConfig()
     utils: TypedUtils = TypedUtils()
-    
+
     # Работа с пользователями
     user_model: TypedUserModel = TypedUserModel(1, "test_user")
     user_dict: Dict[str, Any] = user_model.to_dict()
-    
+
     # Работа с API
     api: TypedAPIWrapper = TypedAPIWrapper("https://api.example.com", "key")
     result: Dict[str, Any] = await api.get_data("users")
-    
+
     # Работа с middleware
     middleware: TypedMiddleware = TypedMiddleware("example")
-    
+
     logger.info("All typed components created successfully")
 
 
 if __name__ == "__main__":
     # Демонстрация типизации
     import asyncio
-    
+
+
     async def main() -> None:
         await example_usage()
         print("✅ Все примеры типизации выполнены успешно!")
-    
+
+
     asyncio.run(main())

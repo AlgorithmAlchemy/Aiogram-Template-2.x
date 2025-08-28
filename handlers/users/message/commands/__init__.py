@@ -1,29 +1,29 @@
 # Импорт всех команд для автоматической регистрации
-from . import start
-from . import menu
 from . import about
-from . import version
-from . import status
-from . import ping
-from . import uptime
-from . import help
-from . import commands
-from . import profile
-from . import settings
-from . import feedback
-from . import support
-from . import echo
 from . import ban_user
-from . import unban_user
-from . import warn_user
-from . import stats
-from . import users
+from . import commands
+from . import echo
+from . import feedback
+from . import help
+from . import menu
+from . import ping
+from . import profile
 from . import register
+from . import settings
+from . import start
+from . import stats
+from . import status
+from . import support
+from . import unban_user
+from . import uptime
+from . import users
+from . import version
+from . import warn_user
 from . import weather
 
 __all__ = [
     'start',
-    'menu', 
+    'menu',
     'about',
     'version',
     'status',

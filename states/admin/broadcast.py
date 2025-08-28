@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 class BroadcastStates(StatesGroup):
     """Состояния для рассылки сообщений"""
-    
+
     waiting_for_message = State()
     waiting_for_confirmation = State()
     waiting_for_target = State()  # all, users, admins
@@ -11,7 +11,7 @@ class BroadcastStates(StatesGroup):
 
 class UserManagementStates(StatesGroup):
     """Состояния для управления пользователями"""
-    
+
     waiting_for_user_id = State()
     waiting_for_action = State()  # ban, unban, warn
     waiting_for_reason = State()
@@ -20,6 +20,6 @@ class UserManagementStates(StatesGroup):
 
 class BackupStates(StatesGroup):
     """Состояния для создания резервных копий"""
-    
+
     waiting_for_backup_type = State()  # full, users, settings
     waiting_for_confirmation = State()

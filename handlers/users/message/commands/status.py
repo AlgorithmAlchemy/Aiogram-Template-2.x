@@ -1,8 +1,9 @@
+import logging
+from datetime import datetime
+
+import psutil
 from aiogram import types
 from aiogram.types import ParseMode
-import logging
-import psutil
-from datetime import datetime
 
 from loader import dp
 from models.user import User
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class StatusCommand:
     """Обработчик команды /status"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /status - статус бота"""
@@ -21,13 +22,13 @@ class StatusCommand:
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()
             disk = psutil.disk_usage('/')
-            
+
             # Конвертируем в GB
-            memory_used_gb = memory.used // (1024**3)
-            memory_total_gb = memory.total // (1024**3)
-            disk_used_gb = disk.used // (1024**3)
-            disk_total_gb = disk.total // (1024**3)
-            
+            memory_used_gb = memory.used // (1024 ** 3)
+            memory_total_gb = memory.total // (1024 ** 3)
+            disk_used_gb = disk.used // (1024 ** 3)
+            disk_total_gb = disk.total // (1024 ** 3)
+
             # Получаем статистику пользователей
             total_users = User.select().count()
             today_start = datetime.now().replace(
@@ -36,7 +37,7 @@ class StatusCommand:
             active_users = User.select().where(
                 User.last_activity >= today_start
             ).count()
-            
+
             status_text = f"""
 <b>📊 Статус бота</b>
 
@@ -56,16 +57,16 @@ class StatusCommand:
 
 <b>Время работы:</b> {StatusCommand._get_uptime()}
 """
-            
+
             await message.answer(
                 status_text,
                 parse_mode=ParseMode.HTML
             )
-            
+
         except Exception as e:
             logger.error(f"Error getting status: {e}")
             await message.answer("❌ Ошибка при получении статуса")
-    
+
     @staticmethod
     def _get_uptime() -> str:
         """Возвращает время работы бота"""

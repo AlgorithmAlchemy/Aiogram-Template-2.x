@@ -1,17 +1,18 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 
+from aiogram import types
+from aiogram.types import ParseMode
+
 from data.config import config
-from loader import dp
 from keyboards.inline.keyboards import UtilityKeyboards
+from loader import dp
 
 logger = logging.getLogger(__name__)
 
 
 class FeedbackCommand:
     """Обработчик команды /feedback"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /feedback - отправить отзыв"""
@@ -35,7 +36,7 @@ class FeedbackCommand:
 
 <i>Просто напишите ваше сообщение в следующем сообщении.</i>
 """
-        
+
         await message.answer(
             feedback_text,
             parse_mode=ParseMode.HTML,

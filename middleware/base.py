@@ -1,6 +1,7 @@
 import logging
 import time
 from typing import Any, Awaitable, Callable, Dict, Union
+
 from aiogram import BaseMiddleware
 from aiogram.types import Message, CallbackQuery
 
@@ -15,13 +16,13 @@ class BaseCustomMiddleware(BaseMiddleware):
         self.name: str = self.__class__.__name__
 
     async def __call__(
-        self,
-        handler: Callable[
-            [Union[Message, CallbackQuery], Dict[str, Any]], 
-            Awaitable[Any]
-        ],
-        event: Union[Message, CallbackQuery],
-        data: Dict[str, Any]
+            self,
+            handler: Callable[
+                [Union[Message, CallbackQuery], Dict[str, Any]],
+                Awaitable[Any]
+            ],
+            event: Union[Message, CallbackQuery],
+            data: Dict[str, Any]
     ) -> Any:
         """Базовый метод вызова middleware"""
         start_time: float = time.time()
@@ -50,18 +51,18 @@ class BaseCustomMiddleware(BaseMiddleware):
                 )
 
     async def pre_process(
-        self, 
-        event: Union[Message, CallbackQuery], 
-        data: Dict[str, Any]
+            self,
+            event: Union[Message, CallbackQuery],
+            data: Dict[str, Any]
     ) -> None:
         """Предобработка события"""
         pass
 
     async def post_process(
-        self, 
-        event: Union[Message, CallbackQuery], 
-        data: Dict[str, Any], 
-        result: Any
+            self,
+            event: Union[Message, CallbackQuery],
+            data: Dict[str, Any],
+            result: Any
     ) -> None:
         """Постобработка события"""
         pass

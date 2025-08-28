@@ -2,18 +2,16 @@
 Команда /weather с использованием API wrapper
 """
 from aiogram import types
-from aiogram.dispatcher import FSMContext
 
-from data.config import config
-from models.user import User
 from api.weather import WeatherAPIWrapper
-
+from data.config import config
 from loader import dp
+from models.user import User
 
 
 class WeatherCommand:
     """Команда получения погоды"""
-    
+
     @staticmethod
     @dp.message_handler(commands=['weather'])
     async def handle(message: types.Message):
@@ -25,7 +23,7 @@ class WeatherCommand:
                 "Обратитесь к администратору."
             )
             return
-        
+
         # Получаем город из сообщения
         args = message.get_args()
         if not args:
@@ -39,22 +37,22 @@ class WeatherCommand:
                 parse_mode='HTML'
             )
             return
-        
+
         city = args.strip()
-        
+
         # Отправляем сообщение о загрузке
         loading_msg = await message.answer(
             f"🌤 Получаю прогноз погоды для <b>{city}</b>...",
             parse_mode='HTML'
         )
-        
+
         try:
             # Создаем экземпляр API wrapper
             weather_api = WeatherAPIWrapper(api_key=config.weather_api_key)
-            
+
             # Получаем данные о погоде
             weather_data = await weather_api.get_weather(city)
-            
+
             if weather_data:
                 # Формируем ответ
                 response = f"""
@@ -68,30 +66,30 @@ class WeatherCommand:
 
 📅 <b>Обновлено:</b> {weather_data.get('updated_at', 'N/A')}
 """
-                
+
                 # Обновляем сообщение
                 await loading_msg.edit_text(response, parse_mode='HTML')
-                
+
                 # Обновляем статистику пользователя
                 try:
                     user = User.get(User.user_id == message.from_user.id)
                     user.update_activity()
                 except Exception as e:
                     print(f"Error updating user activity: {e}")
-                    
+
             else:
                 await loading_msg.edit_text(
                     f"❌ Не удалось получить прогноз погоды для <b>{city}</b>.\n"
                     "Проверьте правильность названия города.",
                     parse_mode='HTML'
                 )
-                
+
         except Exception as e:
             await loading_msg.edit_text(
                 f"❌ Ошибка при получении прогноза погоды:\n<code>{str(e)}</code>",
                 parse_mode='HTML'
             )
-    
+
     @staticmethod
     @dp.message_handler(commands=['weather_help'])
     async def help_handler(message: types.Message):
@@ -119,5 +117,5 @@ class WeatherCommand:
 <b>Примечание:</b>
 Данные предоставляются сервисом OpenWeatherMap.
 """
-        
+
         await message.answer(help_text, parse_mode='HTML')

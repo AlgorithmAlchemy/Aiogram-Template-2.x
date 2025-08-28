@@ -1,6 +1,7 @@
+import logging
+
 from aiogram import types
 from aiogram.types import ParseMode
-import logging
 
 from data.config import config
 from loader import dp
@@ -10,17 +11,17 @@ logger = logging.getLogger(__name__)
 
 class AboutCommand:
     """Обработчик команды /about"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /about - информация о боте"""
         about_text = AboutCommand._get_about_text()
-        
+
         await message.answer(
             about_text,
             parse_mode=ParseMode.HTML
         )
-    
+
     @staticmethod
     def _get_about_text() -> str:
         """Генерирует текст с информацией о боте"""

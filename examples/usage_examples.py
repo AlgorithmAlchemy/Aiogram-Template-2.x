@@ -1,13 +1,13 @@
 import asyncio
-from aiogram import types
-from aiogram.dispatcher import FSMContext
 
-from data.config import config
-from models.user import User, UserSettings, UserStats
-from api.weather import WeatherAPIWrapper
+from aiogram import types
+
 from api.currency import CurrencyAPIWrapper
-from utils.hooks.event_hooks import EventHooks
+from api.weather import WeatherAPIWrapper
+from data.config import config
 from keyboards.inline.keyboards import MainKeyboards, AdminKeyboards
+from models.user import User, UserSettings, UserStats
+from utils.hooks.event_hooks import EventHooks
 
 
 # ============================================================================
@@ -19,7 +19,7 @@ async def example_fsm_usage():
     Пример использования FSM для многошагового диалога
     """
     print("=== Пример FSM использования ===")
-    
+
     # В реальном обработчике это выглядело бы так:
     """
     @dp.message_handler(commands=['survey'])
@@ -52,13 +52,13 @@ async def example_api_wrappers():
     Пример использования API wrappers
     """
     print("=== Пример API wrappers ===")
-    
+
     # Weather API
     if hasattr(config, 'weather_api_key') and config.weather_api_key:
         weather_api = WeatherAPIWrapper(api_key=config.weather_api_key)
         weather_data = await weather_api.get_weather("Москва")
         print(f"Weather data: {weather_data}")
-    
+
     # Currency API
     if hasattr(config, 'currency_api_key') and config.currency_api_key:
         currency_api = CurrencyAPIWrapper(api_key=config.currency_api_key)
@@ -75,7 +75,7 @@ def example_database_usage():
     Пример работы с базой данных
     """
     print("=== Пример работы с БД ===")
-    
+
     # Создание пользователя
     user, created = User.get_or_create(
         user_id=123456789,
@@ -85,18 +85,18 @@ def example_database_usage():
             'username': 'johndoe'
         }
     )
-    
+
     if created:
         print(f"Создан новый пользователь: {user}")
     else:
         print(f"Пользователь уже существует: {user}")
-    
+
     # Обновление статистики
     stats, _ = UserStats.get_or_create(user=user)
     stats.increment_messages()
     stats.increment_commands()
     print(f"Статистика обновлена: {stats}")
-    
+
     # Получение настроек
     settings, _ = UserSettings.get_or_create(user=user)
     settings.language = 'en'
@@ -113,24 +113,24 @@ def example_event_hooks():
     Пример использования event hooks
     """
     print("=== Пример Event Hooks ===")
-    
+
     event_hooks = EventHooks()
-    
+
     # Регистрация startup hook
     @event_hooks.startup_hook
     async def custom_startup():
         print("Custom startup hook executed")
-    
+
     # Регистрация message hook
     @event_hooks.message_hook
     async def custom_message_hook(message: types.Message):
         print(f"Message hook: {message.text}")
-    
+
     # Регистрация error hook
     @event_hooks.error_hook
     async def custom_error_hook(update, exception):
         print(f"Error hook: {exception}")
-    
+
     return event_hooks
 
 
@@ -143,15 +143,15 @@ def example_keyboards():
     Пример создания клавиатур
     """
     print("=== Пример клавиатур ===")
-    
+
     # Главное меню
     main_menu = MainKeyboards.get_main_menu()
     print(f"Main menu keyboard: {main_menu}")
-    
+
     # Админ панель
     admin_panel = AdminKeyboards.get_admin_panel()
     print(f"Admin panel keyboard: {admin_panel}")
-    
+
     # Кастомная клавиатура
     custom_kb = MainKeyboards.create_keyboard([
         [("Кнопка 1", "btn1"), ("Кнопка 2", "btn2")],
@@ -169,13 +169,13 @@ def example_middleware():
     Пример создания middleware
     """
     print("=== Пример Middleware ===")
-    
+
     from utils.middleware.custom_middleware import LoggingMiddleware
-    
+
     # Создание middleware
     logging_middleware = LoggingMiddleware()
     print(f"Logging middleware created: {logging_middleware}")
-    
+
     # В реальном коде middleware регистрируется так:
     """
     dp.middleware.setup(LoggingMiddleware())
@@ -193,7 +193,7 @@ async def example_commands():
     Пример создания команд с параметрами
     """
     print("=== Пример команд ===")
-    
+
     # Команда с аргументами
     """
     @dp.message_handler(commands=['search'])
@@ -208,7 +208,7 @@ async def example_commands():
         results = await perform_search(query)
         await message.answer(f"Результаты поиска для '{query}': {results}")
     """
-    
+
     # Команда с inline клавиатурой
     """
     @dp.message_handler(commands=['menu'])
@@ -227,7 +227,7 @@ async def example_callback_handlers():
     Пример обработки callback queries
     """
     print("=== Пример callback handlers ===")
-    
+
     """
     @dp.callback_query_handler(lambda c: c.data.startswith('btn_'))
     async def process_callback(callback_query: types.CallbackQuery):
@@ -252,12 +252,11 @@ def example_scheduler():
     Пример использования планировщика
     """
     print("=== Пример планировщика ===")
-    
+
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
-    from apscheduler.triggers.cron import CronTrigger
-    
+
     scheduler = AsyncIOScheduler()
-    
+
     # Ежедневная задача в 9:00
     """
     async def daily_task():
@@ -272,7 +271,7 @@ def example_scheduler():
         id='daily_task'
     )
     """
-    
+
     print("Scheduler example created")
 
 
@@ -285,7 +284,7 @@ async def example_error_handling():
     Пример обработки ошибок
     """
     print("=== Пример обработки ошибок ===")
-    
+
     """
     @dp.errors_handler()
     async def errors_handler(update, exception):
@@ -315,35 +314,35 @@ async def demonstrate_all_features():
     """
     print("🚀 Демонстрация возможностей aiogram 2.x шаблона")
     print("=" * 60)
-    
+
     # 1. Работа с БД
     example_database_usage()
     print()
-    
+
     # 2. Event hooks
     example_event_hooks()
     print()
-    
+
     # 3. Клавиатуры
     example_keyboards()
     print()
-    
+
     # 4. Middleware
     example_middleware()
     print()
-    
+
     # 5. Планировщик
     example_scheduler()
     print()
-    
+
     # 6. API wrappers (если есть ключи)
     await example_api_wrappers()
     print()
-    
+
     # 7. FSM
     await example_fsm_usage()
     print()
-    
+
     print("✅ Демонстрация завершена!")
     print("\n📚 Для получения дополнительной информации:")
     print("• README.md - основная документация")

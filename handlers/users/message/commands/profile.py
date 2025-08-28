@@ -1,42 +1,43 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 
+from aiogram import types
+from aiogram.types import ParseMode
+
 from data.config import config
+from handlers.base_handler import BaseCommandHandler
 from loader import dp
 from models.user import User, UserStats
-from handlers.base_handler import BaseCommandHandler
 
 logger = logging.getLogger(__name__)
 
 
 class ProfileCommandHandler(BaseCommandHandler):
     """Обработчик команды /profile"""
-    
+
     def get_command(self) -> str:
         return "profile"
-    
+
     async def handle(self, message: types.Message):
         """Обработчик команды /profile - показывает профиль пользователя"""
         user = message.from_user
-        
+
         try:
             # Получаем данные из БД
             db_user = User.get_or_none(User.user_id == user.id)
-            
+
             if db_user:
                 # Получаем статистику
                 stats = UserStats.get_or_none(UserStats.user == db_user)
-                
+
                 # Определяем статус пользователя
                 user_status = (
-                    '👑 Администратор' if user.id in config.admin.owner_ids 
+                    '👑 Администратор' if user.id in config.admin.owner_ids
                     else '👤 Пользователь'
                 )
-                
+
                 # Определяем статус аккаунта
                 account_status = ('🚫 Забанен' if db_user.is_banned else '✅ Активен')
-                
+
                 profile_text = f"""
 <b>📋 Профиль пользователя</b>
 
@@ -68,12 +69,12 @@ class ProfileCommandHandler(BaseCommandHandler):
 
 Попробуйте использовать команду /start для регистрации.
 """
-            
+
             await message.answer(
                 profile_text,
                 parse_mode=ParseMode.HTML
             )
-            
+
         except Exception as e:
             logger.error(f"Error getting profile for user {user.id}: {e}")
             await message.answer("❌ Ошибка при получении профиля")

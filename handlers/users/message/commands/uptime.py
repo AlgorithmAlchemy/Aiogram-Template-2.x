@@ -1,7 +1,8 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 from datetime import datetime
+
+from aiogram import types
+from aiogram.types import ParseMode
 
 from loader import dp
 
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class UptimeCommand:
     """Обработчик команды /uptime"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /uptime - время работы бота"""
@@ -25,12 +26,12 @@ class UptimeCommand:
 
 <i>Бот работает стабильно и готов к работе!</i>
 """
-        
+
         await message.answer(
             uptime_text,
             parse_mode=ParseMode.HTML
         )
-    
+
     @staticmethod
     def _get_uptime() -> str:
         """Возвращает время работы бота"""

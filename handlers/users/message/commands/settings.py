@@ -1,16 +1,17 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 
-from loader import dp
+from aiogram import types
+from aiogram.types import ParseMode
+
 from keyboards.inline.keyboards import MainKeyboards
+from loader import dp
 
 logger = logging.getLogger(__name__)
 
 
 class SettingsCommand:
     """Обработчик команды /settings"""
-    
+
     @staticmethod
     async def handle(message: types.Message):
         """Обработчик команды /settings - открыть настройки"""
@@ -26,7 +27,7 @@ class SettingsCommand:
 
 <i>Настройки будут доступны в следующем обновлении.</i>
 """
-        
+
         await message.answer(
             settings_text,
             parse_mode=ParseMode.HTML,

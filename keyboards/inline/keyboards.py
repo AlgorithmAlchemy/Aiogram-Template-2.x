@@ -1,15 +1,16 @@
+from typing import List
+
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from typing import List, Optional
 
 
 class KeyboardBuilder:
     """Базовый класс для создания клавиатур"""
-    
+
     @staticmethod
     def create_keyboard(buttons: List[List[dict]], row_width: int = 2) -> InlineKeyboardMarkup:
         """Создает клавиатуру из списка кнопок"""
         keyboard = InlineKeyboardMarkup(row_width=row_width)
-        
+
         for row in buttons:
             keyboard_row = []
             for button in row:
@@ -27,13 +28,13 @@ class KeyboardBuilder:
                     )
                 )
             keyboard.add(*keyboard_row)
-        
+
         return keyboard
 
 
 class MainKeyboards:
     """Класс для основных клавиатур"""
-    
+
     @staticmethod
     def get_main_keyboard() -> InlineKeyboardMarkup:
         """Главная клавиатура для пользователей"""
@@ -51,7 +52,7 @@ class MainKeyboards:
             ]
         ]
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_admin_keyboard() -> InlineKeyboardMarkup:
         """Клавиатура для администраторов"""
@@ -81,7 +82,7 @@ class MainKeyboards:
             ]
         ]
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_settings_keyboard() -> InlineKeyboardMarkup:
         """Клавиатура настроек"""
@@ -107,7 +108,7 @@ class MainKeyboards:
 
 class AdminKeyboards:
     """Класс для админских клавиатур"""
-    
+
     @staticmethod
     def get_user_management_keyboard() -> InlineKeyboardMarkup:
         """Клавиатура управления пользователями"""
@@ -133,7 +134,7 @@ class AdminKeyboards:
             ]
         ]
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_broadcast_keyboard() -> InlineKeyboardMarkup:
         """Клавиатура для рассылки"""
@@ -155,7 +156,7 @@ class AdminKeyboards:
             ]
         ]
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_backup_keyboard() -> InlineKeyboardMarkup:
         """Клавиатура для резервных копий"""
@@ -181,7 +182,7 @@ class AdminKeyboards:
 
 class UtilityKeyboards:
     """Класс для утилитарных клавиатур"""
-    
+
     @staticmethod
     def get_confirm_keyboard(action: str, text_yes: str = "✅ Да", text_no: str = "❌ Нет") -> InlineKeyboardMarkup:
         """Клавиатура подтверждения действия"""
@@ -192,7 +193,7 @@ class UtilityKeyboards:
             ]
         ]
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_back_keyboard(callback_data: str = "main_menu", text: str = "🔙 Назад") -> InlineKeyboardMarkup:
         """Клавиатура с кнопкой назад"""
@@ -202,41 +203,41 @@ class UtilityKeyboards:
             ]
         ]
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_pagination_keyboard(
-        current_page: int, 
-        total_pages: int, 
-        callback_prefix: str,
-        show_first_last: bool = True
+            current_page: int,
+            total_pages: int,
+            callback_prefix: str,
+            show_first_last: bool = True
     ) -> InlineKeyboardMarkup:
         """Клавиатура пагинации"""
         buttons = []
-        
+
         # Кнопки навигации
         nav_buttons = []
-        
+
         if show_first_last and current_page > 1:
             nav_buttons.append({'text': '⏮', 'callback_data': f'{callback_prefix}_page_1'})
-        
+
         if current_page > 1:
             nav_buttons.append({'text': '◀️', 'callback_data': f'{callback_prefix}_page_{current_page - 1}'})
-        
+
         nav_buttons.append({'text': f'{current_page}/{total_pages}', 'callback_data': 'current_page'})
-        
+
         if current_page < total_pages:
             nav_buttons.append({'text': '▶️', 'callback_data': f'{callback_prefix}_page_{current_page + 1}'})
-        
+
         if show_first_last and current_page < total_pages:
             nav_buttons.append({'text': '⏭', 'callback_data': f'{callback_prefix}_page_{total_pages}'})
-        
+
         buttons.append(nav_buttons)
-        
+
         # Кнопка назад
         buttons.append([{'text': '🔙 Назад', 'callback_data': 'back'}])
-        
+
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_language_keyboard() -> InlineKeyboardMarkup:
         """Клавиатура выбора языка"""
@@ -258,7 +259,7 @@ class UtilityKeyboards:
             ]
         ]
         return KeyboardBuilder.create_keyboard(buttons)
-    
+
     @staticmethod
     def get_theme_keyboard() -> InlineKeyboardMarkup:
         """Клавиатура выбора темы"""
@@ -282,14 +283,18 @@ class UtilityKeyboards:
 def get_main_keyboard() -> InlineKeyboardMarkup:
     return MainKeyboards.get_main_keyboard()
 
+
 def get_admin_keyboard() -> InlineKeyboardMarkup:
     return MainKeyboards.get_admin_keyboard()
+
 
 def get_settings_keyboard() -> InlineKeyboardMarkup:
     return MainKeyboards.get_settings_keyboard()
 
+
 def get_confirm_keyboard(action: str) -> InlineKeyboardMarkup:
     return UtilityKeyboards.get_confirm_keyboard(action)
+
 
 def get_back_keyboard(callback_data: str = "main_menu") -> InlineKeyboardMarkup:
     return UtilityKeyboards.get_back_keyboard(callback_data)

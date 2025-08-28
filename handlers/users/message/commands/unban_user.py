@@ -1,27 +1,28 @@
-from aiogram import types
-from aiogram.types import ParseMode
 import logging
 
+from aiogram import types
+from aiogram.types import ParseMode
+
 from data.config import config
+from handlers.base_handler import BaseCommandHandler
 from loader import dp
 from models.user import User
-from handlers.base_handler import BaseCommandHandler
 
 logger = logging.getLogger(__name__)
 
 
 class UnbanUserCommandHandler(BaseCommandHandler):
     """Обработчик команды /unban_user"""
-    
+
     def get_command(self) -> str:
         return "unban_user"
-    
+
     async def handle(self, message: types.Message):
         """Обработчик команды /unban_user"""
         if message.from_user.id not in config.admin.owner_ids:
             await message.answer("❌ У вас нет прав администратора!")
             return
-        
+
         # Получаем аргументы команды
         args = message.get_args().split()
         if not args:
@@ -30,9 +31,9 @@ class UnbanUserCommandHandler(BaseCommandHandler):
                 "Пример: /unban_user 123456789 или /unban_user @username"
             )
             return
-        
+
         target = args[0]
-        
+
         try:
             # Определяем ID пользователя
             if target.startswith('@'):
@@ -52,32 +53,32 @@ class UnbanUserCommandHandler(BaseCommandHandler):
                 except ValueError:
                     await message.answer("❌ Неверный формат ID пользователя!")
                     return
-                
+
                 user = User.get_or_none(User.user_id == user_id)
                 if not user:
                     await message.answer(
                         f"❌ Пользователь с ID {user_id} не найден в базе данных!"
                     )
                     return
-            
+
             # Проверяем, не пытается ли админ разбанить сам себя
             if user_id == message.from_user.id:
                 await message.answer("❌ Вы не можете разбанить сами себя!")
                 return
-            
+
             # Проверяем, не забанен ли пользователь
             if not user.is_banned:
                 await message.answer("❌ Пользователь не заблокирован!")
                 return
-            
+
             # Разбаниваем пользователя
             user.unban()
-            
+
             # Логируем действие
             logger.info(
                 f"Admin {message.from_user.id} unbanned user {user_id}"
             )
-            
+
             # Отправляем подтверждение
             unban_text = f"""
 <b>✅ Пользователь разблокирован</b>
@@ -89,12 +90,12 @@ class UnbanUserCommandHandler(BaseCommandHandler):
 
 <i>Пользователь снова может использовать бота</i>
 """
-            
+
             await message.answer(
                 unban_text,
                 parse_mode=ParseMode.HTML
             )
-            
+
         except Exception as e:
             logger.error(f"Error unbanning user: {e}")
             await message.answer("❌ Ошибка при разблокировке пользователя")
