@@ -71,5 +71,4 @@ class BotLoader:
 loader = BotLoader()
 bot, dp = loader.initialize()
 
-# Экспорт для использования в других модулях
 __all__ = ['bot', 'dp', 'loader', 'config']

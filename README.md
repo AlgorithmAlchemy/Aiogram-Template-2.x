@@ -1,4 +1,4 @@
-# Aiogram 2.x Template - Современная Архитектура
+# Aiogram 2.x Template - Архитектура
 
 Современный шаблон для Telegram ботов на aiogram 2.x с правильной архитектурой, ООП подходом и лучшими практиками.
 
@@ -120,7 +120,7 @@ async with WeatherAPIWrapper() as api:
     weather = await api.get_weather("Moscow")
 ```
 
-## 📚 Примеры
+## Примеры
 
 ### Создание нового хэндлера
 
@@ -190,7 +190,6 @@ BOT_TOKEN = "your_bot_token"
 ADMIN_IDS = [123456789]
 DEBUG = True
 
-# Redis (опционально)
 USE_REDIS = False
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
@@ -199,52 +198,6 @@ REDIS_PORT = 6379
 ### API ключи
 
 ```python
-# API ключи для внешних сервисов
 WEATHER_API_KEY = "your_openweathermap_key"
 CURRENCY_API_KEY = "your_exchangerate_key"
 ```
-
-## 🛠️ Разработка
-
-### Добавление новых функций
-
-1. **Хэндлеры** - наследуйтесь от базовых классов
-2. **API** - используйте BaseAPIWrapper
-3. **Middleware** - наследуйтесь от BaseCustomMiddleware
-4. **Модели** - наследуйтесь от BaseModel
-5. **Регистрация** - добавьте в main.py
-
-### Тестирование
-
-```bash
-# Запуск примеров
-python examples/oop_handlers_example.py
-python examples/api_examples.py
-python examples/middleware_examples.py
-```
-
-## 🤝 Вклад в проект
-
-1. Fork проекта
-2. Создайте ветку для новой функции (`git checkout -b feature/amazing-feature`)
-3. Commit изменения (`git commit -m 'Add amazing feature'`)
-4. Push в ветку (`git push origin feature/amazing-feature`)
-5. Откройте Pull Request
-
-## 📄 Лицензия
-
-Этот проект лицензирован под MIT License - см. файл [LICENSE](LICENSE) для деталей.
-
-## Благодарности
-
-- [aiogram](https://github.com/aiogram/aiogram) - отличная библиотека для Telegram ботов
-- [Peewee](https://github.com/coleifer/peewee) - легкий ORM
-- Сообщество разработчиков Telegram ботов
-
-## 📞 Поддержкаe
-
-- 🐛 Issues: [GitHub Issues](https://github.com/your-username/aiogram-template/issues)
-
----
-
-⭐ Если этот проект вам помог, поставьте звездочку!
