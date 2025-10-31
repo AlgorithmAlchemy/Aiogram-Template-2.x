@@ -1,53 +1,52 @@
-# 🤖 Aiogram 2.x Template - Современная Архитектура
+# Aiogram 2.x Template - Современная Архитектура
 
 Современный шаблон для Telegram ботов на aiogram 2.x с правильной архитектурой, ООП подходом и лучшими практиками.
 
-## ✨ Особенности
+## Особенности
 
-- **🏗️ Правильная архитектура** - четкое разделение ответственности
-- **🎯 ООП подход** - все хэндлеры наследуются от базовых классов
-- **🗄️ Улучшенная БД** - система миграций, история модерации, мягкое удаление
-- **🔧 Middleware** - в правильном месте, с базовыми классами
-- **🌐 API архитектура** - асинхронные обертки для внешних API
-- **📝 Явная регистрация** - все компоненты регистрируются в main.py
-- **🚀 Масштабируемость** - легко добавлять новые функции
-- **🧪 Тестируемость** - каждый компонент независим
+- ** Правильная архитектура** - четкое разделение ответственности
+- ** ООП подход** - все хэндлеры наследуются от базовых классов
+- ** Улучшенная БД** - система миграций, история модерации, мягкое удаление
+- ** Middleware** - в правильном месте, с базовыми классами
+- ** API архитектура** - асинхронные обертки для внешних API
+- ** Явная регистрация** - все компоненты регистрируются в main.py
+- ** Масштабируемость** - легко добавлять новые функции
+- ** Тестируемость** - каждый компонент независим
 
-## 📁 Структура проекта
+## Структура проекта
 
 ```
-├── main.py                    # 🎯 Главная точка входа
-├── loader.py                  # ⚙️ Базовая инициализация
-├── data/                      # 📋 Конфигурация
-├── models/                    # 🗄️ Модели БД
-│   ├── base.py               # 📦 Базовая модель
-│   ├── user.py               # 👤 Модели пользователей
-│   ├── migrations.py         # 🔄 Система миграций
-│   └── sqlite3_creator.py    # 🛠️ Менеджер БД
-├── database/                  # 🔌 Подключение к БД
-│   └── connection.py         # ⚡ Настройки подключения
-├── api/                       # 🌐 Внешние API
-│   ├── base.py               # 📦 Базовый класс API
-│   ├── weather.py            # 🌤️ API погоды
-│   └── currency.py           # 💱 API валют
-├── handlers/                  # 🎮 Обработчики
-│   ├── base_handler.py       # 📦 Базовые классы
-│   └── users/message/commands/ # 📝 Команды
-├── middleware/                # 🔧 Middleware
-│   ├── base.py               # 📦 Базовый класс
-│   ├── logging.py            # 📝 Логирование
-│   ├── throttling.py         # ⏱️ Ограничение частоты
-│   ├── admin.py              # 👑 Проверка админов
-│   └── database.py           # 🗄️ Работа с БД
-├── utils/                     # 🛠️ Утилиты
-├── filters/                   # 🔍 Фильтры
-├── states/                    # 🎯 FSM состояния
-├── keyboards/                 # ⌨️ Клавиатуры
-├── examples/                  # 📚 Примеры
-└── docs/                      # 📖 Документация
+├── main.py                     # Главная точка входа
+├── loader.py                   # ️ Базовая инициализация
+├── data/                       #  Конфигурация
+├── models/                     # ️ Модели БД
+│   ├── base.py                 # Базовая модель
+│   ├── user.py                 # Модели пользователей
+│   └── sqlite3_creator.py      # Менеджер БД
+├── database/                   # Подключение к БД
+│   └── connection.py           # Настройки подключения
+├── api/                        # Внешние API
+│   ├── base.py                 # Базовый класс API
+│   ├── weather.py              # API погоды
+│   └── currency.py             # API валют
+├── handlers/                   # Обработчики
+│   ├── base_handler.py         # Базовые классы
+│   └── users/message/commands/ # Команды
+├── middleware/                 # Middleware
+│   ├── base.py                 # Базовый класс
+│   ├── logging.py              # Логирование
+│   ├── throttling.py           # Ограничение частоты
+│   ├── admin.py                # Проверка админов
+│   └── database.py             # Работа с БД
+├── utils/                      # Утилиты
+├── filters/                    # Фильтры
+├── states/                     # FSM состояния
+├── keyboards/                  # Клавиатуры
+├── examples/                   # Примеры
+└── docs/                       # Документация
 ```
 
-## 🚀 Быстрый старт
+## Быстрый старт
 
 ### 1. Установка
 
@@ -67,10 +66,10 @@ cp data/config.example.py data/config.py
 ### 3. Запуск
 
 ```bash
-python main.py
+python bot.py
 ```
 
-## 🏗️ Архитектура
+## Архитектура
 
 ### Loader (loader.py)
 
@@ -139,7 +138,7 @@ class MyCommandHandler(BaseCommandHandler):
         await message.answer("Мой хэндлер!")
 
 
-# main.py
+# bot.py
 from handlers.users.message.commands.mycommand import MyCommandHandler
 
 MyCommandHandler(self.dp),
@@ -181,7 +180,7 @@ class NewModel(BaseModel):
         table_name = 'new_table'
 ```
 
-## 🔧 Конфигурация
+## Конфигурация
 
 ### Основные настройки
 
@@ -205,14 +204,6 @@ WEATHER_API_KEY = "your_openweathermap_key"
 CURRENCY_API_KEY = "your_exchangerate_key"
 ```
 
-## 📖 Документация
-
-- [📋 Архитектура проекта](docs/ARCHITECTURE.md)
-- [🎮 Примеры хэндлеров](examples/oop_handlers_example.py)
-- [🌐 Примеры API](examples/api_examples.py)
-- [🔧 Примеры middleware](examples/middleware_examples.py)
-- [🗄️ Примеры БД](examples/improved_database_examples.py)
-
 ## 🛠️ Разработка
 
 ### Добавление новых функций
@@ -232,33 +223,6 @@ python examples/api_examples.py
 python examples/middleware_examples.py
 ```
 
-## 🔄 Миграция с 1.x
-
-### Основные изменения
-
-1. **Хэндлеры** - переписать под ООП подход
-2. **Импорты** - обновить пути к middleware, API, БД
-3. **Регистрация** - перенести в main.py
-4. **Модели** - наследоваться от BaseModel
-
-### Пошаговая миграция
-
-```bash
-# 1. Создайте резервную копию
-cp -r your_old_project backup/
-
-# 2. Обновите хэндлеры
-# См. примеры в examples/oop_handlers_example.py
-
-# 3. Обновите импорты
-# middleware/ вместо utils/middleware/
-# api/ вместо utils/api_wrappers/
-# database/ вместо utils/db_api/
-
-# 4. Зарегистрируйте в main.py
-# См. register_handlers() в main.py
-```
-
 ## 🤝 Вклад в проект
 
 1. Fork проекта
@@ -271,7 +235,7 @@ cp -r your_old_project backup/
 
 Этот проект лицензирован под MIT License - см. файл [LICENSE](LICENSE) для деталей.
 
-## 🙏 Благодарности
+## Благодарности
 
 - [aiogram](https://github.com/aiogram/aiogram) - отличная библиотека для Telegram ботов
 - [Peewee](https://github.com/coleifer/peewee) - легкий ORM

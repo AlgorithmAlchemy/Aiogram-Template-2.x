@@ -10,7 +10,6 @@ from loader import bot, dp
 from models.migrations import MigrationManager
 from models.sqlite3_creator import DatabaseManager
 
-# Настройка логирования
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
