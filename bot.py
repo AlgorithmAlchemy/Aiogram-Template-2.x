@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 def setup_logging() -> None:
-    """Настройка логирования"""
     logging.basicConfig(
         level=getattr(logging, config.logging.level.upper()),
         format=config.logging.format,
