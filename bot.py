@@ -27,37 +27,13 @@ def setup_logging() -> None:
         ]
     )
 
-
-def db_connect() -> None:
-    """Подключение к базе данных"""
-    try:
-        # Создаем менеджер базы данных
-        db_manager = DatabaseManager()
-
-        # Создаем таблицы
-        db_manager.create_tables()
-        logger.info("Database tables created successfully")
-
-        # Применяем миграции
-        migration_manager = MigrationManager()
-        migration_manager.migrate()
-        logger.info("Database migrations applied successfully")
-
-    except Exception as e:
-        logger.error(f"Database connection error: {e}")
-        raise
-
-
 class BotManager:
-    """Менеджер бота для управления жизненным циклом"""
-
     def __init__(self, bot: Bot, dp: Dispatcher) -> None:
         self.bot: Bot = bot
         self.dp: Dispatcher = dp
         self.start_time: Optional[datetime] = None
 
     async def on_startup(self, dp: Dispatcher) -> None:
-        """Действия при запуске бота"""
         self.start_time = datetime.now()
         logger.info("Bot starting up...")
 
@@ -135,23 +111,15 @@ class BotManager:
             raise
 
     async def setup_middleware(self) -> None:
-        """Настройка middleware"""
         try:
             from middleware.logging import LoggingMiddleware
             from middleware.throttling import ThrottlingMiddleware
             from middleware.admin import AdminMiddleware
             from middleware.database import DatabaseMiddleware
 
-            # Базовое логирование
             self.dp.middleware.setup(LoggingMiddleware())
-
-            # Ограничение частоты запросов
             self.dp.middleware.setup(ThrottlingMiddleware(rate_limit=0.5))
-
-            # Проверка администраторов
             self.dp.middleware.setup(AdminMiddleware())
-
-            # Работа с базой данных
             self.dp.middleware.setup(DatabaseMiddleware())
 
             logger.info("Custom middleware registered successfully")
@@ -160,23 +128,19 @@ class BotManager:
             raise
 
     async def setup_filters(self) -> None:
-        """Настройка фильтров"""
         try:
-            # Здесь можно добавить глобальные фильтры
             logger.info("Filters setup completed")
         except Exception as e:
             logger.error(f"Error setting up filters: {e}")
             raise
 
     async def setup_error_handlers(self) -> None:
-        """Настройка обработчиков ошибок"""
         try:
             @self.dp.errors_handler()
             async def errors_handler(
                     update: types.Update,
                     exception: Exception
             ) -> bool:
-                """Глобальный обработчик ошибок"""
                 logger.error(f"Update: {update}")
                 logger.error(f"Exception: {exception}")
                 return True
@@ -187,17 +151,14 @@ class BotManager:
             raise
 
 
-# Создаем экземпляр менеджера бота
 bot_manager = BotManager(bot, dp)
 
-# Настройка логирования
 setup_logging()
 
-# Запуск бота
 if __name__ == '__main__':
     logger.info("Starting bot...")
 
-    # Настройка allowed_updates для aiogram 2.x
+    # Configuring allowed_updates for aiogram 2.x
     allowed_updates = [
         'message',
         'edited_message',
