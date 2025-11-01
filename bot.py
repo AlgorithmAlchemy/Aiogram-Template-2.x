@@ -38,23 +38,15 @@ class BotManager:
         logger.info("Bot starting up...")
 
         try:
-            # Подключение к базе данных
-            db_connect()
-            logger.info("Database connected successfully")
-
-            # Регистрация хэндлеров
             await self.register_handlers()
             logger.info("Handlers registered successfully")
 
-            # Регистрация middleware
             await self.setup_middleware()
             logger.info("Middleware setup completed")
 
-            # Регистрация фильтров
             await self.setup_filters()
             logger.info("Filters setup completed")
 
-            # Регистрация ошибок
             await self.setup_error_handlers()
             logger.info("Error handlers setup completed")
 
@@ -65,15 +57,14 @@ class BotManager:
             raise
 
     async def on_shutdown(self, dp: Dispatcher) -> None:
-        """Действия при остановке бота"""
         logger.info("Bot shutting down...")
 
         try:
-            # Закрытие соединений
+            # Closing Connections
             await self.bot.session.close()
             logger.info("Bot session closed")
 
-            # Дополнительная очистка если нужно
+            # Additional cleaning if needed
             if self.start_time:
                 uptime = datetime.now() - self.start_time
                 logger.info(f"Bot stopped. Uptime: {uptime}")
@@ -82,9 +73,7 @@ class BotManager:
             logger.error(f"Error during shutdown: {e}")
 
     async def register_handlers(self) -> None:
-        """Регистрация всех хэндлеров"""
         try:
-            # Импортируем хэндлеры
             from handlers.users.message.commands.start import StartCommandHandler
             from handlers.users.message.commands.profile import ProfileCommandHandler
             from handlers.users.message.commands.ban_user import BanUserCommandHandler
@@ -93,7 +82,7 @@ class BotManager:
             from handlers.users.message.commands.weather import WeatherCommandHandler
             from handlers.users.message.echo import EchoMessageHandler
 
-            # Создаем экземпляры хэндлеров для автоматической регистрации
+            # Creating handler instances for automatic registration
             handlers: List[object] = [
                 StartCommandHandler(self.dp),
                 ProfileCommandHandler(self.dp),
