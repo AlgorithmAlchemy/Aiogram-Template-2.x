@@ -11,15 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 class BotLoader:
-    """Класс для базовой инициализации бота"""
-
     def __init__(self) -> None:
         self.bot: Optional[Bot] = None
         self.dp: Optional[Dispatcher] = None
         self.storage: Optional[MemoryStorage | RedisStorage2] = None
 
     def setup_storage(self) -> None:
-        """Настройка хранилища состояний"""
         if config.redis.use_redis:
             try:
                 self.storage = RedisStorage2(
@@ -37,7 +34,6 @@ class BotLoader:
             logger.info("Using Memory storage")
 
     def setup_bot(self) -> None:
-        """Инициализация бота"""
         self.bot = Bot(
             token=config.bot.token,
             parse_mode=types.ParseMode.HTML
@@ -45,7 +41,6 @@ class BotLoader:
         logger.info("Bot initialized")
 
     def setup_dispatcher(self) -> None:
-        """Инициализация диспетчера"""
         if self.bot is None or self.storage is None:
             raise RuntimeError("Bot and storage must be initialized first")
 
@@ -53,7 +48,6 @@ class BotLoader:
         logger.info("Dispatcher initialized")
 
     def initialize(self) -> Tuple[Bot, Dispatcher]:
-        """Базовая инициализация бота"""
         logger.info("Starting basic bot initialization...")
 
         self.setup_storage()
@@ -66,8 +60,6 @@ class BotLoader:
         logger.info("Basic bot initialization completed")
         return self.bot, self.dp
 
-
-# Создаем экземпляр загрузчика
 loader = BotLoader()
 bot, dp = loader.initialize()
 
