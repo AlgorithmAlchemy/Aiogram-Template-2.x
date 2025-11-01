@@ -9,8 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class BaseCustomMiddleware(BaseMiddleware):
-    """Базовый класс для всех middleware"""
-
     def __init__(self) -> None:
         super().__init__()
         self.name: str = self.__class__.__name__
@@ -24,28 +22,22 @@ class BaseCustomMiddleware(BaseMiddleware):
             event: Union[Message, CallbackQuery],
             data: Dict[str, Any]
     ) -> Any:
-        """Базовый метод вызова middleware"""
+        """Basic method of calling middleware"""
         start_time: float = time.time()
 
         try:
-            # Предобработка
             await self.pre_process(event, data)
-
-            # Выполнение обработчика
             result: Any = await handler(event, data)
-
-            # Постобработка
             await self.post_process(event, data, result)
-
             return result
 
         except Exception as e:
             logger.error(f"Error in {self.name}: {e}")
             raise
         finally:
-            # Логирование времени выполнения
+            # Runtime logging
             execution_time: float = time.time() - start_time
-            if execution_time > 1.0:  # Логируем медленные запросы
+            if execution_time > 1.0:  # Logging slow requests
                 logger.warning(
                     f"Slow request in {self.name}: {execution_time:.2f}s"
                 )
@@ -55,7 +47,7 @@ class BaseCustomMiddleware(BaseMiddleware):
             event: Union[Message, CallbackQuery],
             data: Dict[str, Any]
     ) -> None:
-        """Предобработка события"""
+        """Event Preprocessing"""
         pass
 
     async def post_process(
@@ -64,5 +56,5 @@ class BaseCustomMiddleware(BaseMiddleware):
             data: Dict[str, Any],
             result: Any
     ) -> None:
-        """Постобработка события"""
+        """Event Post-Processing"""
         pass

@@ -9,10 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class LoggingMiddleware(BaseCustomMiddleware):
-    """Middleware для логирования всех обновлений"""
-
     async def pre_process(self, event: Message | CallbackQuery, data: Dict[str, Any]):
-        """Логирование входящего обновления"""
         user = event.from_user
 
         if isinstance(event, Message):
@@ -27,5 +24,4 @@ class LoggingMiddleware(BaseCustomMiddleware):
             )
 
     async def post_process(self, event: Message | CallbackQuery, data: Dict[str, Any], result: Any):
-        """Логирование результата"""
         logger.info(f"Handler completed successfully for {self.name}")
