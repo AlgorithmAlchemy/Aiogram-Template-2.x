@@ -4,13 +4,11 @@ from typing import List, Optional
 
 from dotenv import load_dotenv
 
-# Загружаем переменные окружения
 load_dotenv()
 
 
 @dataclass
 class DatabaseConfig:
-    """Конфигурация базы данных"""
     path: str = os.getenv('DB_PATH', 'data/botBD.db')
     type: str = os.getenv('DB_TYPE', 'sqlite')
     host: Optional[str] = os.getenv('DB_HOST')
@@ -22,7 +20,6 @@ class DatabaseConfig:
 
 @dataclass
 class RedisConfig:
-    """Конфигурация Redis"""
     host: str = os.getenv('REDIS_HOST', 'localhost')
     port: int = int(os.getenv('REDIS_PORT', '6379'))
     db: int = int(os.getenv('REDIS_DB', '0'))
@@ -32,7 +29,6 @@ class RedisConfig:
 
 @dataclass
 class LoggingConfig:
-    """Конфигурация логирования"""
     level: str = os.getenv('LOG_LEVEL', 'INFO')
     file: str = os.getenv('LOG_FILE', 'bot.log')
     format: str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -42,7 +38,6 @@ class LoggingConfig:
 
 @dataclass
 class BotConfig:
-    """Конфигурация бота"""
     token: str = os.getenv('BOT_TOKEN', 'YOUR_BOT_TOKEN_HERE')
     name: str = os.getenv('BOT_NAME', 'Aiogram Template Bot')
     description: str = os.getenv(
@@ -53,12 +48,10 @@ class BotConfig:
     support: str = os.getenv('SUPPORT_USERNAME', '@support_username')
     timezone: str = os.getenv('TIMEZONE', 'Europe/Moscow')
 
-    # Настройки производительности
     max_retries: int = int(os.getenv('MAX_RETRIES', '3'))
     timeout: int = int(os.getenv('TIMEOUT', '30'))
     page_size: int = int(os.getenv('PAGE_SIZE', '10'))
 
-    # Настройки webhook (опционально)
     webhook_url: Optional[str] = os.getenv('WEBHOOK_URL')
     webhook_path: str = os.getenv('WEBHOOK_PATH', '/webhook')
     webhook_port: int = int(os.getenv('WEBHOOK_PORT', '8000'))
@@ -66,7 +59,6 @@ class BotConfig:
 
 @dataclass
 class AdminConfig:
-    """Конфигурация администраторов"""
     owner_ids: List[int] = None
 
     def __post_init__(self):
@@ -81,8 +73,6 @@ class AdminConfig:
 
 
 class Config:
-    """Основной класс конфигурации"""
-
     def __init__(self):
         self.bot = BotConfig()
         self.admin = AdminConfig()
@@ -90,11 +80,9 @@ class Config:
         self.redis = RedisConfig()
         self.logging = LoggingConfig()
 
-        # Дополнительные настройки
         self.chat_id = os.getenv('CHAT_ID', 'YOUR_CHAT_ID_HERE')
         self.debug = os.getenv('DEBUG', 'false').lower() == 'true'
 
-        # Тексты справок
         self.admin_help_text = """
 <b>🔧 Панель администратора</b>
 
@@ -141,11 +129,8 @@ class Config:
 <b>Поддержка:</b> {support}
 """.format(support=self.bot.support)
 
-
-# Создаем глобальный экземпляр конфигурации
 config = Config()
 
-# Экспортируем основные переменные для обратной совместимости
 API_TOKEN = config.bot.token
 OWNER = config.admin.owner_ids
 CHAT = config.chat_id

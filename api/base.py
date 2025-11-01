@@ -8,15 +8,13 @@ logger = logging.getLogger(__name__)
 
 
 class BaseAPIWrapper(ABC):
-    """Базовый класс для всех API оберток"""
-
     def __init__(self, base_url: str, timeout: int = 30) -> None:
         self.base_url: str = base_url.rstrip('/')
         self.timeout: int = timeout
         self.session: Optional[aiohttp.ClientSession] = None
 
     async def __aenter__(self) -> 'BaseAPIWrapper':
-        """Асинхронный контекстный менеджер - вход"""
+        """Asynchronous Context Manager - Login"""
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=self.timeout)
         )
@@ -28,7 +26,7 @@ class BaseAPIWrapper(ABC):
             exc_val: Any,
             exc_tb: Any
     ) -> None:
-        """Асинхронный контекстный менеджер - выход"""
+        """Asynchronous Context Manager - Exit"""
         if self.session:
             await self.session.close()
 
@@ -39,11 +37,11 @@ class BaseAPIWrapper(ABC):
             endpoint: str,
             data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Абстрактный метод для выполнения запросов"""
+        """Abstract method for executing queries"""
         pass
 
     async def get(self, endpoint: str) -> Dict[str, Any]:
-        """GET запрос"""
+        """GET queri"""
         return await self.make_request('GET', endpoint)
 
     async def post(
@@ -51,7 +49,7 @@ class BaseAPIWrapper(ABC):
             endpoint: str,
             data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """POST запрос"""
+        """POST queri"""
         return await self.make_request('POST', endpoint, data)
 
     async def put(
@@ -59,15 +57,15 @@ class BaseAPIWrapper(ABC):
             endpoint: str,
             data: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """PUT запрос"""
+        """PUT queri"""
         return await self.make_request('PUT', endpoint, data)
 
     async def delete(self, endpoint: str) -> Dict[str, Any]:
-        """DELETE запрос"""
+        """DELETE queri"""
         return await self.make_request('DELETE', endpoint)
 
     async def handle_error(self, error: Exception) -> Dict[str, Any]:
-        """Обработка ошибок API"""
+        """API error handling"""
         logger.error(f"API Error: {error}")
         return {
             'success': False,
@@ -76,5 +74,5 @@ class BaseAPIWrapper(ABC):
         }
 
     def build_url(self, endpoint: str) -> str:
-        """Построение полного URL"""
+        """Building a full URL"""
         return f"{self.base_url}/{endpoint.lstrip('/')}"

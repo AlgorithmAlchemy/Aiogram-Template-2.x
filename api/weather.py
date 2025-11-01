@@ -8,8 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class WeatherAPIWrapper(BaseAPIWrapper):
-    """Обертка для API погоды"""
-
     def __init__(self, api_key: str = None):
         super().__init__(
             api_key=api_key or config.api.weather_api_key,
@@ -18,7 +16,7 @@ class WeatherAPIWrapper(BaseAPIWrapper):
 
     async def make_request(self, method: str, endpoint: str,
                            data: Dict[str, Any] = None) -> Dict[str, Any]:
-        """Выполнить запрос к API погоды"""
+        """Make a request to the Weather API"""
         try:
             url = f"{self.base_url}/{endpoint}"
             params = data or {}
@@ -33,9 +31,7 @@ class WeatherAPIWrapper(BaseAPIWrapper):
             return self.handle_error(e)
 
     async def get_weather(self, city: str) -> Dict[str, Any]:
-        """Получить погоду для города"""
         return await self.get('weather', {'q': city, 'units': 'metric'})
 
     async def get_forecast(self, city: str) -> Dict[str, Any]:
-        """Получить прогноз погоды для города"""
         return await self.get('forecast', {'q': city, 'units': 'metric'})
