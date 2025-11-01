@@ -1,4 +1,3 @@
 # Hooks package
-# Здесь будут размещены различные хуки для интеграции
-
+# Various Hooks for Integration will be placed here
 __all__ = []

@@ -8,8 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class EventHooks:
-    """Класс для управления хуками событий"""
-
     def __init__(self, dp: Dispatcher):
         self.dp = dp
         self.hooks = {
