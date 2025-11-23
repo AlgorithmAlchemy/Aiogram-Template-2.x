@@ -10,7 +10,7 @@
 *.db
 *.sqlite
 *.sqlite3
-data/botBD.db
+app/data/botBD.db
 *.sql
 
 # Логи
@@ -136,6 +136,6 @@ prometheus.yml
 grafana/
 
 # Специфичные для проекта
-data/message_urls
+app/data/message_urls
 *.session
 *.session-journal

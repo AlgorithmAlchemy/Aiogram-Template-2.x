@@ -126,7 +126,7 @@ async with WeatherAPIWrapper() as api:
 
 ```python
 # handlers/users/message/commands/mycommand.py
-from handlers.base_handler import BaseCommandHandler
+from app.handlers import BaseCommandHandler
 from aiogram import types
 
 
@@ -139,7 +139,7 @@ class MyCommandHandler(BaseCommandHandler):
 
 
 # bot.py
-from handlers.users.message.commands.mycommand import MyCommandHandler
+from app.handlers.users.message.commands import MyCommandHandler
 
 MyCommandHandler(self.dp),
 ```
@@ -148,7 +148,7 @@ MyCommandHandler(self.dp),
 
 ```python
 # api/custom.py
-from api.base import BaseAPIWrapper
+from app.api import BaseAPIWrapper
 
 
 class CustomAPIWrapper(BaseAPIWrapper):
@@ -169,13 +169,14 @@ async with CustomAPIWrapper() as api:
 
 ```python
 # models/new_model.py
-from models.base import BaseModel
+from app.models import BaseModel
 from peewee import CharField
+
 
 class NewModel(BaseModel):
     name = CharField(max_length=100)
     description = CharField(null=True)
-    
+
     class Meta:
         table_name = 'new_table'
 ```
