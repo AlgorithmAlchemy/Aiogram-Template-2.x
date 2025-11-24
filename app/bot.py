@@ -25,6 +25,7 @@ def setup_logging() -> None:
         ]
     )
 
+
 class BotManager:
     def __init__(self, bot: Bot, dp: Dispatcher) -> None:
         self.bot: Bot = bot
